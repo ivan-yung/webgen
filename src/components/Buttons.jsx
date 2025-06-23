@@ -24,7 +24,6 @@ const selector = (store) => ({
   
   const nodeTypes = {
     osc: Osc,
-  
   };
 
   export default function Buttons(){
@@ -40,7 +39,28 @@ const selector = (store) => ({
       store.createNode(
         'osc',
         { x: 100, y: 100},
-        {frequency: 0, type: 'sine'}, );
+        {frequency: 0, type: 'sine'},
+      );}
+
+    const createNavBar = () => {
+      store.createNode(
+        'navBar',
+        { x: 100, y: 100},
+        {Field1: 'Home', Field2: 'About'}, );
+    }
+
+    const createNavMenu = () => {
+      store.createNode(
+        'navMenu',
+        { x: 100, y: 100},
+        {Field1: 'Home', Field2: 'About'}, );
+    }
+
+    const createAccordian = () => {
+      store.createNode(
+        'accordian',
+        { x: 100, y: 100},
+        {Field1: 'Home', Field2: 'About'}, );
     }
 
     return(
@@ -48,6 +68,9 @@ const selector = (store) => ({
       <div style = {{display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0',}}>
         <button onClick = {logStoreHandler}>Log</button>
         <button onClick = {createOsc}>Osc</button>
+        <button onClick = {createNavBar}>Nav</button>
+        <button onClick = {createNavMenu}>NavMenu</button>
+        <button onClick = {createAccordian}>Accordian</button>
 
       </div>  
       

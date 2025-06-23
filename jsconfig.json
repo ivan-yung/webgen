@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"] // Assuming you set up lib/utils.js
+      // Add other common aliases here if you have them, e.g.,
+      // "@/hooks/*": ["./src/hooks/*"],
+      // "@/utils/*": ["./src/utils/*"]
+    },
+    "jsx": "react-jsx" // Important for JSX support in jsconfig
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -7,6 +7,9 @@ import { useStore } from './store';
 import './styles/App.css';
 import Buttons from './components/Buttons.jsx';
 import Osc from './nodes/Osc.jsx';
+import NavBar from './nodes/NavBar.jsx';
+import NavMenu from './nodes/NavMenu.jsx';
+import Accordian from './nodes/Accordian.jsx';
 
 const selector = (store) => ({
   nodes: store.nodes,
@@ -18,6 +21,9 @@ const selector = (store) => ({
  
 const nodeTypes = {
   osc: Osc,
+  navBar: NavBar,
+  navMenu: NavMenu,
+  accordian: Accordian,
 };
 
 export default function App() {
@@ -34,7 +40,9 @@ export default function App() {
         onEdgesChange={store.onEdgesChange}
         onConnect={store.addEdge}
       >
-        <Background />
+      <div className="bg-gray-100 h-full w-full">
+      </div>
+      <Background/>
       </ReactFlow>
 
     </>

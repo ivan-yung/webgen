@@ -4,10 +4,22 @@ import { createWithEqualityFn } from 'zustand/traditional';
  
 export const useStore = createWithEqualityFn((set, get) => ({
   nodes: [
+    {
+      id: 'Background-Canvas',
+      type: 'group',
+      data: { label: null },
+      position: { x: 10, y: 10 },
+      style: {
+        width: 1000,
+        height: 2000,
+      },
+    },
     { type: 'osc',
       id: 'a',
       data: { frequency: 220, type: 'square' },
-      position: { x: 0, y: 0 }
+      position: { x: 0, y: 0 },
+      parentId: 'Background-Canvas',
+      extent: 'parent',
     },
   ],
   edges: [],
@@ -22,6 +34,8 @@ export const useStore = createWithEqualityFn((set, get) => ({
       id,
       type,
       position,
+      parentId: 'Background-Canvas',
+      extent: 'parent',
       data,
     };
     set({
