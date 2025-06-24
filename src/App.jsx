@@ -4,9 +4,14 @@ import { shallow } from 'zustand/shallow';
  
 import { useStore } from './store';
 
-import './styles/App.css';
+import './styles/index.css';
 import Buttons from './components/Buttons.jsx';
 import Osc from './nodes/Osc.jsx';
+import NavBar from './nodes/NavBar.jsx';
+import NavMenu from './nodes/NavMenu.jsx';
+import Accordian from './nodes/RadixAccordian.jsx';
+import RadixPicture from './nodes/RadixPicture.jsx';
+import Button from './nodes/Button.jsx';
 
 const selector = (store) => ({
   nodes: store.nodes,
@@ -18,6 +23,11 @@ const selector = (store) => ({
  
 const nodeTypes = {
   osc: Osc,
+  navBar: NavBar,
+  navMenu: NavMenu,
+  accordian: Accordian,
+  backgroundPicture: RadixPicture,
+  button: Button,
 };
 
 export default function App() {
@@ -34,9 +44,10 @@ export default function App() {
         onEdgesChange={store.onEdgesChange}
         onConnect={store.addEdge}
       >
-        <Background />
+      <div className="bg-gray-100 h-full w-full">
+      </div>
       </ReactFlow>
-
+      
     </>
   );
 }
