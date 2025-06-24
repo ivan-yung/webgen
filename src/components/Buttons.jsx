@@ -3,12 +3,13 @@ import {useState} from "react";
 
 import { shallow } from 'zustand/shallow';
 import { useStore } from "../store";
+import { Button } from "@/components/ui/button"
 
-import Osc from "../nodes/Osc";
-
+import '../styles/index.css';
 
 const selector = (store) => ({
     createNode: (type, position, data) => store.createNode(type, position, data),
+    createImage: (type, position, data) => store.createImage(type, position, data),
   
     bezEdge: store.updateEdgesDefault,
     stepEdge: store.updateEdgesToSmoothstep,
@@ -21,10 +22,6 @@ const selector = (store) => ({
     logEdges: store.logEdges,
     logStore: store.logStore,
   });
-  
-  const nodeTypes = {
-    osc: Osc,
-  };
 
   export default function Buttons(){
     const store = useStore(selector, shallow);
@@ -63,15 +60,32 @@ const selector = (store) => ({
         {Field1: 'Home', Field2: 'About'}, );
     }
 
+    const createPicture = () => {
+      store.createImage(
+        'backgroundPicture',
+        { x: 100, y: 100},
+        {src: 'https://via.placeholder.com/150', alt: 'Placeholder Image'},
+      );
+    }
+
+    const createButton = () => {
+      store.createNode(
+        'button',
+        { x: 100, y: 100},
+        {label: 'Button'},
+      );
+    }
+
     return(
       <>
-      <div style = {{display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0',}}>
-        <button onClick = {logStoreHandler}>Log</button>
-        <button onClick = {createOsc}>Osc</button>
-        <button onClick = {createNavBar}>Nav</button>
-        <button onClick = {createNavMenu}>NavMenu</button>
-        <button onClick = {createAccordian}>Accordian</button>
-
+      <div style = {{display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px'}}>
+        <Button variant="outline" onClick = {logStoreHandler}>Log</Button>
+        <Button variant="outline" onClick = {createOsc}>Osc</Button>
+        <Button variant="outline" onClick = {createNavBar}>Nav</Button>
+        <Button variant="outline" onClick = {createNavMenu}>NavMenu</Button>
+        <Button variant="outline" onClick = {createAccordian}>Accordian</Button>
+        <Button variant="outline" onClick = {createPicture}>Picture</Button>
+        <Button variant="outline" onClick = {createButton}>Button</Button>
       </div>  
       
       </>

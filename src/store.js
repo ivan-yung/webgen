@@ -13,19 +13,13 @@ export const useStore = createWithEqualityFn((set, get) => ({
         width: 1000,
         height: 2000,
       },
-    },
-    { type: 'osc',
-      id: 'a',
-      data: { frequency: 220, type: 'square' },
-      position: { x: 0, y: 0 },
-      parentId: 'Background-Canvas',
-      extent: 'parent',
+      draggable: false,
     },
   ],
   edges: [],
  
   // Creates a node based on parameters passed
-  // @type: gate type (string input)
+  // @type: object type (string input)
   // @position: start position (2d array input)
   // @data: starting data value
   createNode: (type, position, data = {}) => {
@@ -37,6 +31,27 @@ export const useStore = createWithEqualityFn((set, get) => ({
       parentId: 'Background-Canvas',
       extent: 'parent',
       data,
+    };
+    set({
+      nodes: [...get().nodes, newNode],
+    });
+  },
+
+  // Creates an image object based on parameters passed
+  // @type: object type (string input)
+  // @position: start position (2d array input)
+  createImage: (type, position, data = {}) => {
+    const id = nanoid(6);
+    const newNode = {
+      id,
+      type,
+      position,
+      parentId: 'Background-Canvas',
+      extent: 'parent',
+      data,
+      height: 150,
+      width: 300,
+      selected: true,
     };
     set({
       nodes: [...get().nodes, newNode],

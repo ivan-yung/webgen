@@ -98,7 +98,7 @@ const NavigationMenuDemo = () => {
 				<NavigationMenu.Item>
 					<NavigationMenu.Link
 						className="NavigationMenuLink"
-						href="https://github.com/radix-ui"
+						// href="https://github.com/radix-ui"
 					>
 						Github
 					</NavigationMenu.Link>
