@@ -31,26 +31,18 @@ const selector = (store) => ({
     const handleLogEdges = () => {logEdges();}
     const logStoreHandler = () => {logStore();}
 
-    //Node creation calls
-    const createOsc = () => {
-      store.createNode(
-        'osc',
-        { x: 100, y: 100},
-        {frequency: 0, type: 'sine'},
-      );}
-
     const createNavBar = () => {
       store.createNode(
         'navBar',
         { x: 100, y: 100},
-        {Field1: 'Home', Field2: 'About'}, );
+        {Field1: 'Home', Field2: 'Features', Field3: 'Pricing', Field4: 'About', Logo: 'WebProducer'}, );
     }
 
     const createNavMenu = () => {
       store.createNode(
         'navMenu',
         { x: 100, y: 100},
-        {Field1: 'Home', Field2: 'About'}, );
+        {Field1: 'Learn', Field2: 'Overview', Field3: 'Github'}, );
     }
 
     const createAccordian = () => {
@@ -64,7 +56,7 @@ const selector = (store) => ({
       store.createImage(
         'backgroundPicture',
         { x: 100, y: 100},
-        {src: 'https://via.placeholder.com/150', alt: 'Placeholder Image'},
+        {src: 'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80'},
       );
     }
 
@@ -72,15 +64,14 @@ const selector = (store) => ({
       store.createNode(
         'button',
         { x: 100, y: 100},
-        {label: 'Button'},
+        {label: 'Outline'},
       );
     }
 
     return(
       <>
       <div style = {{display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px'}}>
-        <Button variant="outline" onClick = {logStoreHandler}>Log</Button>
-        <Button variant="outline" onClick = {createOsc}>Osc</Button>
+        <Button variant="outline" onClick = {logStoreHandler}>🪄 Generate</Button>
         <Button variant="outline" onClick = {createNavBar}>Nav</Button>
         <Button variant="outline" onClick = {createNavMenu}>NavMenu</Button>
         <Button variant="outline" onClick = {createAccordian}>Accordian</Button>

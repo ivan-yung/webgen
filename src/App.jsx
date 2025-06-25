@@ -6,7 +6,6 @@ import { useStore } from './store';
 
 import './styles/index.css';
 import Buttons from './components/Buttons.jsx';
-import Osc from './nodes/Osc.jsx';
 import NavBar from './nodes/NavBar.jsx';
 import NavMenu from './nodes/NavMenu.jsx';
 import Accordian from './nodes/RadixAccordian.jsx';
@@ -22,7 +21,6 @@ const selector = (store) => ({
 });
  
 const nodeTypes = {
-  osc: Osc,
   navBar: NavBar,
   navMenu: NavMenu,
   accordian: Accordian,
