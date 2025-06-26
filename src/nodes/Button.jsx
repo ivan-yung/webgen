@@ -30,7 +30,7 @@ export default function ButtonOutline({ selected, id, initialText = "Outline" })
           placeholder="Enter text..."
           value={buttonText}
           onChange={handleInputChange}
-          className="w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="nodrag w-full p-2 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>

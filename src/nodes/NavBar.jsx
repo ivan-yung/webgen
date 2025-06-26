@@ -158,10 +158,9 @@ const NavBar = ({ selected, id, data }) => {
                             name="Field1" // Changed name to Field1
                             value={settings.Field1}
                             onChange={handleSettingChange}
-                            className="
+                            className=" nodrag
                                 p-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-100
-                                focus:outline-none focus:ring-2 focus:ring-blue-500
-                            "
+                                focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </label>
                     <label className="flex flex-col gap-2">
@@ -171,7 +170,7 @@ const NavBar = ({ selected, id, data }) => {
                             name="Field2" // Changed name to Field2
                             value={settings.Field2}
                             onChange={handleSettingChange}
-                            className="
+                            className=" nodrag
                                 p-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-100
                                 focus:outline-none focus:ring-2 focus:ring-blue-500
                             "
@@ -210,7 +209,7 @@ const NavBar = ({ selected, id, data }) => {
                             name="Logo" // Changed name to Logo
                             value={settings.Logo}
                             onChange={handleSettingChange}
-                            className="
+                            className=" nodrag
                                 p-2 rounded-lg border border-gray-600 bg-gray-800 text-gray-100
                                 focus:outline-none focus:ring-2 focus:ring-blue-500
                             "

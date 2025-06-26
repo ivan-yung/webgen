@@ -49,14 +49,21 @@ const selector = (store) => ({
       store.createNode(
         'accordian',
         { x: 100, y: 100},
-        {Field1: 'Home', Field2: 'About'}, );
+        {
+        Heading1: 'Is it free?', 
+        Heading2: 'How does it work?',
+        Heading3: 'How can I generate?', 
+        Content1: 'Yes. it is free for usage!',
+        Content2: 'Every front end ui component is represented as a json object, which can be used to generate code for your project.',
+        Content3: 'You can generate code by clicking on the generate button, which will create code for all the components you have created in the canvas.',
+      }, );
     }
 
     const createPicture = () => {
       store.createImage(
         'backgroundPicture',
         { x: 100, y: 100},
-        {src: 'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80'},
+        {src: 'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80', Hero: false},
       );
     }
 
