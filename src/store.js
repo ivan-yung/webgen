@@ -5,10 +5,24 @@ import { createWithEqualityFn } from 'zustand/traditional';
 export const useStore = createWithEqualityFn((set, get) => ({
   nodes: [
     {
+      id: 'theme',
+      type: 'colorPick',
+      position: { x: 10, y: 0 },
+      selected: false,
+      data: {color: '#000000', label: 'Theme' },
+    },
+    {
+      id: 'accent',
+      type: 'colorPick',
+      position: { x: 150, y: 0 },
+      selected: false,
+      data: {color: '#7a54c3', label: 'Accent' },
+    },
+    {
       id: 'Background-Canvas',
       type: 'group',
       data: { label: null },
-      position: { x: 10, y: 10 },
+      position: { x: 10, y: 100 },
       style: {
         width: 1000,
         height: 2000,
@@ -31,6 +45,7 @@ export const useStore = createWithEqualityFn((set, get) => ({
       parentId: 'Background-Canvas',
       extent: 'parent',
       data,
+      selected: false,
     };
     set({
       nodes: [...get().nodes, newNode],
@@ -51,7 +66,7 @@ export const useStore = createWithEqualityFn((set, get) => ({
       data,
       height: 150,
       width: 300,
-      selected: true,
+      selected: false,
     };
     set({
       nodes: [...get().nodes, newNode],

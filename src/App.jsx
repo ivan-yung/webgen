@@ -11,6 +11,7 @@ import NavMenu from './nodes/NavMenu.jsx';
 import Accordian from './nodes/RadixAccordian.jsx';
 import RadixPicture from './nodes/RadixPicture.jsx';
 import Button from './nodes/Button.jsx';
+import colorPick from './nodes/colorPick.jsx';
 
 const selector = (store) => ({
   nodes: store.nodes,
@@ -26,6 +27,7 @@ const nodeTypes = {
   accordian: Accordian,
   backgroundPicture: RadixPicture,
   button: Button,
+  colorPick: colorPick,
 };
 
 export default function App() {
