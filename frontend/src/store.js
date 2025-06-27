@@ -10,6 +10,7 @@ export const useStore = createWithEqualityFn((set, get) => ({
       position: { x: 10, y: 0 },
       selected: false,
       data: {color: '#000000', label: 'Theme' },
+      deletable: false
     },
     {
       id: 'accent',
@@ -17,6 +18,7 @@ export const useStore = createWithEqualityFn((set, get) => ({
       position: { x: 150, y: 0 },
       selected: false,
       data: {color: '#7a54c3', label: 'Accent' },
+      deletable: false
     },
     {
       id: 'Background-Canvas',
@@ -28,6 +30,7 @@ export const useStore = createWithEqualityFn((set, get) => ({
         height: 2000,
       },
       draggable: false,
+      deletable: false
     },
   ],
   edges: [],
@@ -106,6 +109,6 @@ export const useStore = createWithEqualityFn((set, get) => ({
     //debug funct
   logStore: () => {
     const store = get();
-    console.log('Zustand Store:', store.nodes);
+    return store.nodes;
   },
 }));

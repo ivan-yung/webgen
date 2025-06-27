@@ -8,7 +8,7 @@ import './styles/index.css';
 import Buttons from './components/Buttons.jsx';
 import NavBar from './nodes/NavBar.jsx';
 import NavMenu from './nodes/NavMenu.jsx';
-import Accordian from './nodes/RadixAccordian.jsx';
+import Accordion from './nodes/RadixAccordion.jsx';
 import RadixPicture from './nodes/RadixPicture.jsx';
 import Button from './nodes/Button.jsx';
 import colorPick from './nodes/colorPick.jsx';
@@ -24,7 +24,7 @@ const selector = (store) => ({
 const nodeTypes = {
   navBar: NavBar,
   navMenu: NavMenu,
-  accordian: Accordian,
+  accordion: Accordion,
   backgroundPicture: RadixPicture,
   button: Button,
   colorPick: colorPick,
