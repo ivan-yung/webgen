@@ -34,9 +34,9 @@ func CallGroqAPI(apiKey, instructions string, designJson json.RawMessage) (strin
 
 	// Prepare the request payload
 	payload := Request{
-		Model: "llama3-8b-8192", // Or your preferred model
+		Model: "gemma2-9b-it",
 		Messages: []Message{
-			{Role: "system", Content: "You are a helpful assistant that processes design JSON."},
+			{Role: "system", Content: "You are an expert react developer that processes design JSON into react code"},
 			{Role: "user", Content: userContent},
 		},
 	}

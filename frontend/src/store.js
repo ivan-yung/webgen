@@ -111,4 +111,26 @@ export const useStore = createWithEqualityFn((set, get) => ({
     const store = get();
     return store.nodes;
   },
+
+  // --- NEW additions for LLM Console ---
+  llmOutput: [
+    // Add a default message to show it's working
+    { type: 'system', message: 'LLM Console initialized.' }
+  ],
+  addLlmOutput: (entry) =>
+    set((state) => ({
+      llmOutput: [...state.llmOutput, entry],
+    })),
+
+  // Helper to log a new LLM output (string or object)
+  logLlmOutput: (message) => {
+    set((state) => ({
+      llmOutput: [
+        ...state.llmOutput,
+        typeof message === 'string' ? { type: 'llm', message } : message,
+      ],
+    }));
+  },
+  clearLlmOutput: () => set({ llmOutput: [] }),
+
 }));

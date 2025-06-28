@@ -15,7 +15,8 @@ import '../styles/index.css';
 const selector = (store) => ({
     createNode: (type, position, data) => store.createNode(type, position, data),
     createImage: (type, position, data) => store.createImage(type, position, data),
-  
+    addLlmOutput: (message) => store.addLlmOutput(message),
+
     bezEdge: store.updateEdgesDefault,
     stepEdge: store.updateEdgesToSmoothstep,
     nodes: store.nodes,
@@ -26,6 +27,7 @@ const selector = (store) => ({
   
     logEdges: store.logEdges,
     logStore: store.logStore,
+
   });
 
 function parseJson(raw){
@@ -85,12 +87,32 @@ function parseJson(raw){
   return parsed;
 };
 
+function cleanGroqOutput(text) {
+  // First, we check if the provided input is actually a string.
+  // This prevents errors if another data type is passed by mistake.
+  if (typeof text !== 'string') {
+    console.error("Error: Input must be a string. Returning original input.");
+    return text;
+  }
+
+  // We use the String.prototype.replace() method with a regular expression.
+  // The regular expression /```/g looks for the "```" sequence.
+  // The 'g' flag stands for "global," which ensures that *all* occurrences
+  // are replaced, not just the first one.
+  // We replace each occurrence with an empty string (''), effectively removing it.
+  const cleanedText = text.replace(/```/g, '');
+
+  // Return the newly cleaned string.
+  return cleanedText;
+}
+
   export default function Buttons(){
     const store = useStore(selector, shallow);
     const {logEdges, logStore} = useStore();
     const [isLoading, setIsLoading] = useState(false);
     const [generatedCode, setGeneratedCode] = useState('');
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
 
     const GenerateHandler = async () => {
       setIsLoading(true);
@@ -104,35 +126,46 @@ function parseJson(raw){
       //forward parsed layout to go server
       const instructions = prompt;
 
-      // try {
-      //   const response = await fetch('/api/groq', {
-      //     method: 'POST',
-      //     headers: {
-      //       'Content-Type': 'application/json',
-      //     },
-      //     body: JSON.stringify({
-      //       designJson: layout,
-      //       instructions,
-      //     }),
-      //   });
+      try {
+        const response = await fetch('/api/groq', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            designJson: layout,
+            instructions,
+          }),
+        });
+      
+        if (!response.ok) {
+          throw new Error('Failed to fetch from backend');
+        }
+      
+        const data = await response.json();
+        console.log('Groq API completion:', data.completion);
+        setGeneratedCode(data.completion);
 
-      //   if (!response.ok) {
-      //     throw new Error('Failed to fetch from backend');
-      //   }
+        const parsedgroq = cleanGroqOutput(data.completion);
+        store.addLlmOutput({type: 'llm-response', language: 'javascript', message: parsedgroq});
 
-      //   const data = await response.json();
-      //   console.log('Groq API completion:', data.completion);
-      //   setGeneratedCode(data.completion);
-      //   // Optionally update state/UI with data.completion
+        setShowModal(true);
+      
+      } catch (error) {
+        console.error('Error:', error);
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
 
-      // } catch (error) {
-      //   console.error('Error:', error);
-      //   setError(error.message);
-      // } finally {
+      // Dummy API call for testing
+      // setTimeout(() => {
+      //   const dummyCode = `// Example React code generated\n\nexport default function App() {\n  return (\n    <div className=\"min-h-screen bg-gray-50 flex flex-col items-center justify-center\">\n      <h1 className=\"text-3xl font-bold text-purple-700 mb-4\">WebProducer Demo</h1>\n      <button className=\"px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition\" onClick={() => alert('Button clicked!')}>Click Me</button>\n    </div>\n  );\n}`;
+      //   setGeneratedCode(dummyCode);
+      //   store.addLlmOutput({type: 'llm-response', language: 'javascript', message: dummyCode});
+      //   setShowModal(true);
       //   setIsLoading(false);
-      // }
-      setError('there is an error');
-      setIsLoading(false);
+      // }, 800);
     }
     
     const createNavBar = () => {
@@ -181,20 +214,35 @@ function parseJson(raw){
 
     return(
       <>
-      <div style = {{display: 'flex', justifyContent: 'center', gap: '10px', margin: '10px 0', backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px'}}>
-        <Button variant="outline" onClick = {GenerateHandler}>
+      <div className="flex justify-center gap-2 bg-gray-100 p-2 rounded-md">
+        <Button variant="outline" onClick={GenerateHandler}>
           {isLoading ? '🪄 Generating...' : '🪄 Generate'}
         </Button>
-        <Button variant="outline" onClick = {createNavBar}>Nav</Button>
-        <Button variant="outline" onClick = {createNavMenu}>NavMenu</Button>
-        <Button variant="outline" onClick = {createaccordion}>accordion</Button>
-        <Button variant="outline" onClick = {createPicture}>Picture</Button>
-        <Button variant="outline" onClick = {createButton}>Button</Button>
-      </div>  
+        <Button variant="outline" onClick={createNavBar}>Nav</Button>
+        <Button variant="outline" onClick={createNavMenu}>NavMenu</Button>
+        <Button variant="outline" onClick={createaccordion}>accordion</Button>
+        <Button variant="outline" onClick={createPicture}>Picture</Button>
+        <Button variant="outline" onClick={createButton}>Button</Button>
+      </div>
 
-        {error && 
+      {/* Modal for CodeDisplay */}
+      {/* {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{background: 'rgba(100,100,100,0.4)'}}>
+          <div className="bg-white bg-opacity-95 rounded-xl shadow-2xl p-6 max-w-3xl w-full max-h-[80vh] overflow-auto relative border border-gray-200">
+            <button
+              onClick={() => setShowModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 text-2xl font-bold focus:outline-none"
+              aria-label="Close"
+            >&times;</button>
+            <div className="overflow-auto max-h-[65vh]">
+              <CodeDisplay code={generatedCode} />
+            </div>
+          </div>
+        </div>
+      )} */}
+
+      {error && 
         <div>
-          {/* {error} */}
           <Alert variant="destructive">
             <AlertCircleIcon />
             <AlertTitle>Error Generating Site!</AlertTitle>
@@ -203,7 +251,7 @@ function parseJson(raw){
             </AlertDescription>
           </Alert>
         </div>
-        }
+      }
       </>
     )
 
