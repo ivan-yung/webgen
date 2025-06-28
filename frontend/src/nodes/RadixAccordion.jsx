@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import "../styles/RadixAccordianStyles.css";
 import { useStore } from '../store'; // Adjust this path!
 
-const RadixAccordian = ({ selected, id }) => { // Accept 'id' prop for the node
+const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
     // State to manage whether the form is shown or not
     const [showForm, setShowForm] = React.useState(false);
 
@@ -245,4 +245,4 @@ const AccordionContent = React.forwardRef(
     ),
 );
 
-export default RadixAccordian;
+export default RadixAccordion;

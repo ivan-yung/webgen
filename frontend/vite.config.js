@@ -11,4 +11,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    proxy: {
+      // Requests to /api will be sent to Go backend
+      '/api': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+        secure: false, // (true if using HTTPS)
+      },
+    }
+  }
 })
