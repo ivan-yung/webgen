@@ -23,6 +23,8 @@ export default function LLMSidebar({ width, setWidth }) {
   const { output, clear, addMessage } = useStore(selector, shallow);
   const scrollRef = useRef(null);
   const [lastCopiedIndex, setLastCopiedIndex] = useState(null);
+  const [userInput, setUserInput] = useState('');
+  const [isSending, setIsSending] = useState(false);
 
   const copyHandler = (codeToCopy, index) => {
     if (codeToCopy) {
@@ -37,6 +39,32 @@ export default function LLMSidebar({ width, setWidth }) {
         });
     }
   };
+
+  const sendResponse = async (e) => {
+    e.preventDefault();
+    if (!userInput.trim()) return;
+    addMessage({ type: 'user', message: userInput });
+    setIsSending(true);
+    try {
+      // Send to backend
+      const response = await fetch('/api/groq', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instructions: userInput }),
+      });
+      const data = await response.json();
+      addMessage({
+        type: 'llm-response',
+        language: 'javascript',
+        message: data.completion,
+      });
+    } catch (err) {
+      addMessage({ type: 'error', message: 'Failed to get LLM response.' });
+    }
+    setIsSending(false);
+    setUserInput('');
+  };
+
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -131,12 +159,48 @@ export default function LLMSidebar({ width, setWidth }) {
         </div>
         
         <div className="p-1 border-t border-gray-300 flex-shrink-0">
-          <button 
-            className="w-full p-1 text-xs text-center text-gray-500 hover:bg-gray-200 rounded" 
-            onClick={() => addMessage({type: 'llm-response', message: `This is a test response at ${new Date().toLocaleTimeString()}`})}
+          <form
+            className="flex gap-2 p-2 border-t border-gray-300 bg-gray-50"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!userInput.trim()) return;
+              addMessage({ type: 'user', message: userInput });
+              setIsSending(true);
+              try {
+                // Send to backend
+                const response = await fetch('/api/groq', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ instructions: userInput }),
+                });
+                const data = await response.json();
+                addMessage({
+                  type: 'llm-response',
+                  language: 'javascript',
+                  message: data.completion,
+                });
+              } catch (err) {
+                addMessage({ type: 'error', message: 'Failed to get LLM response.' });
+              }
+              setIsSending(false);
+              setUserInput('');
+            }}
           >
-            (Click to Add Test Message)
-          </button>
+            <input
+              className="flex-1 p-1 text-sm border rounded"
+              value={userInput}
+              onChange={e => setUserInput(e.target.value)}
+              placeholder="Type a message..."
+              disabled={isSending}
+            />
+            <button
+              type="submit"
+              className="px-3 py-1 text-xs bg-blue-500 text-white rounded disabled:opacity-50"
+              disabled={isSending || !userInput.trim()}
+            >
+              {isSending ? 'Sending...' : 'Send'}
+            </button>
+          </form>
         </div>
     </ResizableBox>
   );

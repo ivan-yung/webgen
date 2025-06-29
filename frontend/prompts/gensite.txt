@@ -18,7 +18,7 @@ NavBar:
 For the navBar component, Field 1-4 represents the clickable links in the top right hand side of the navbar. The logo represents the text that will appear on the top left hand side of the navbar. Please represent this with bolded and stylized text. The navBar should be sticky. 
 
 Accordion:
-When the accordion is clicked, include a dropdown animation, where the fields Heading1, Heading2, Heading3 represent the label of each Accordion tab. When the dropdown animation is clicked, display the contents of Content1, Content2, Content3 respectively from the data field of the Accordion's json field.
+3 dropdown menu with animation when clicked. In the Accordian, include three headings: Heading1, Heading2, Heading3 in JSON represent the label of each Accordion tab, which are to be grabbed from the JSON of fields of accordian component with the same name. When the accordian heading is clicked, display the contents of Content1, Content2, Content3 respectively from the data field of the Accordion's json field.
 
 Button:
 Place the button at the position specified by the measured attribute of the json. Have the button text as specified by the label section under data of the json. When the button is clicked, have it open an alert for now. 

@@ -38,28 +38,28 @@ export default function App() {
 
   return (
     <>
-    <Buttons />
-    <div className="flex w-screen h-screen bg-gray-100">
-
-      <div className="flex-grow h-full relative">
-        
-        <ReactFlow
-          nodes={store.nodes}
-          nodeTypes={nodeTypes}
-          edges={store.edges}
-          onNodesChange={store.onNodesChange}
-          onEdgesChange={store.onEdgesChange}
-          onConnect={store.addEdge}
-        >
-        </ReactFlow>
+    <div className="flex flex-col h-screen w-screen">
+      <div className="flex-shrink-0">
+      <Buttons />
       </div>
-      <LLMSidebar 
-      width = {sidebarWidth}
-      setWidth = {setSidebarWidth}
-      />
-
+      <div className="flex flex-1 min-h-0">
+        <div className="flex-1 min-h-0">
+          <ReactFlow
+            nodes={store.nodes}
+            nodeTypes={nodeTypes}
+            edges={store.edges}
+            onNodesChange={store.onNodesChange}
+            onEdgesChange={store.onEdgesChange}
+            onConnect={store.addEdge}
+          >
+          </ReactFlow>
+        </div>
+        <LLMSidebar 
+        width = {sidebarWidth}
+        setWidth = {setSidebarWidth}
+        />
+      </div>
     </div>
-  
   </>
   );
 }
