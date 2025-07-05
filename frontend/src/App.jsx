@@ -14,6 +14,7 @@ import Accordion from './nodes/RadixAccordion.jsx';
 import RadixPicture from './nodes/RadixPicture.jsx';
 import Button from './nodes/Button.jsx';
 import colorPick from './nodes/colorPick.jsx';
+import RenderCode from './components/RenderCode.jsx';
 
 const selector = (store) => ({
   nodes: store.nodes,
@@ -58,6 +59,9 @@ export default function App() {
         width = {sidebarWidth}
         setWidth = {setSidebarWidth}
         />
+      </div>
+      <div className="flex-shrink-0 p-4 bg-gray-100 max-h-50">
+        <RenderCode code={store.llmOutput || store.code} />
       </div>
     </div>
   </>
