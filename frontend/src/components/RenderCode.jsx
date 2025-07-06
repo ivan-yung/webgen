@@ -20,11 +20,6 @@ function extractLatestCode(llmOutput) {
   for (let i = llmOutput.length - 1; i >= 0; i--) {
     const entry = llmOutput[i];
     if (entry.type === 'llm-response') {
-      console.log("CMON BRODIE");
-      return entry.message;
-    }
-    // Optionally, support string code blocks
-    if (entry.type === 'code' && typeof entry.message === 'string') {
       // Assume it's a single file, e.g. App.js
       console.log("YAAAAAAAAAAAS");
       return { '/App.js': { code: entry.message } };
@@ -35,7 +30,7 @@ function extractLatestCode(llmOutput) {
 }
 
 const RenderCode = () => {
-  const {code, llmOutput, clearLlmOutput, addLlmOutput} = useStore(selector, shallow);
+  const {code, llmOutput, clearLlmOutput, addLlmOutput, codeChunks} = useStore(selector, shallow);
 
   // 'code' is llmOutput array from Zustand
   const latestCode = extractLatestCode(llmOutput);

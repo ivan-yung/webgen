@@ -1,32 +1,26 @@
-Hello, I need you to generate React code for a modern and sleek webpage. Your entire response must be only the raw jsx and css code for the specified files. Do not include any explanatory text, greetings, or markdown formatting. The code should be immediately ready to be saved into `.jsx` and `.css` files.
+Hello, I need you to create the complete React code for a modern and sleek webpage.
 The overall design must be responsive and fluid, designed to fill the user's entire browser viewport. Only output code.
 Attatched is JSON data that represents the components and their content. This data comes from a design mock-up on a fixed 1000px 
 canvas. Use this data for content and for understanding the relative placement of elements, 
 but do not create a fixed 1000px wide webpage.
 
-based on the position, type of component, measured (x and y), 
+based on the position, type of component, measured, 
 write react code for a webpage that takes on this schematic design. Create a modern and sleek ui, using theme color and accent color 
 specified by the layout attribute of the json.
-
-Your code should include minmial dependencies.
-DO NOT write markdown and DO NOT use ``` to label and wrap code.
-USE ONLY jsx, if annotations are needed, use comments.
-Create a file named 'app.jsx' that imports './index.css' and contains the main App component.
-Create a file named 'index.css' for global styles.
 
 NavBar:
 For the navBar component, Field 1-4 represents the clickable links in the top right hand side of the navbar. The logo represents the text that will appear on the top left hand side of the navbar. Please represent this with bolded and stylized text. The navBar should be sticky. 
 
 Accordion:
-3 dropdown menu with animation when clicked. In the Accordian, include three headings: Heading1, Heading2, Heading3 in JSON represent the label of each Accordion tab, which are to be grabbed from the JSON of fields of accordian component with the same name. When the accordian heading is clicked, display the contents of Content1, Content2, Content3 respectively from the data field of the Accordion's json field.
+When the accordion is clicked, include a dropdown animation, where the fields Heading1, Heading2, Heading3 represent the label of each Accordion tab. When the dropdown animation is clicked, display the contents of Content1, Content2, Content3 respectively from the data field of the Accordion's json field.
 
 Button:
 Place the button at the position specified by the measured attribute of the json. Have the button text as specified by the label section under data of the json. When the button is clicked, have it open an alert for now. 
 
 Picture:
-Display the picture represented by the src specified by the src attribute of the data field. In the data field, there are 2 options, src represents the source, and what photo should be displayed, while Hero represents if the picture is a hero section. When Hero is true, the given src is to be displayed as a background image that spans the viewport, essentially a hero section. If Hero is false, include the picture in the position given by the json, and size it to the measured width and height specified by the json.
+Display the picture represented by the src specified by the src attribute of the data field. In the data field, there are 2 options, src represents the source, and what photo should be displayed, while Hero represents if the picture is a hero section. When Hero is true, the given src is to be displayed as a background image that spans the viewport. If Hero is false, include the picture in the position given by the json, and size it to the measured width and height.
 
-navMenu (NOT NAVBAR):
+navMenu:
 Create an interactive horizontal 3 sectioned menu putting Learn, Overview, and Github as section names. Include a downward arrow symbol on Learn and Overview. When the user hovers over a section, render a small info div with placeholder information for now.
 
-// End of instructions. Remember, your entire output must be only the raw code for the files. Do not wrap the code in markdown blocks like ```jsx.
+
