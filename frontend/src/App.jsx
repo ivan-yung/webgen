@@ -60,7 +60,7 @@ export default function App() {
         setWidth = {setSidebarWidth}
         />
       </div>
-      <div className="flex-shrink-0 p-4 bg-gray-100 max-h-50">
+      <div className="">
         <RenderCode code={store.llmOutput || store.code} />
       </div>
     </div>
