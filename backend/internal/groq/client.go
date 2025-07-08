@@ -32,9 +32,9 @@ func CallGroqAPI(apiKey, instructions string, designJson json.RawMessage) (strin
 	// Combine instructions and the raw JSON design into a single user prompt
 	userContent := instructions + "\n\n" + string(designJson)
 
-	// Prepare the request payload
+	// Prepare the request payload       gemma model: gemma2-9b-it  	llama model:   llama3-8b-8192
 	payload := Request{
-		Model: "gemma2-9b-it",
+		Model: "llama3-8b-8192",
 		Messages: []Message{
 			{Role: "system", Content: "You are an expert react developer that processes design JSON into react code"},
 			{Role: "user", Content: userContent},

@@ -1,26 +1,59 @@
-Hello, I need you to create the complete React code for a modern and sleek webpage.
-The overall design must be responsive and fluid, designed to fill the user's entire browser viewport. Only output code.
-Attatched is JSON data that represents the components and their content. This data comes from a design mock-up on a fixed 1000px 
-canvas. Use this data for content and for understanding the relative placement of elements, 
-but do not create a fixed 1000px wide webpage.
+You are an expert React developer tasked with creating a modern, sleek webpage from a JSON data structure. Please adhere to the following instructions precisely.
 
-based on the position, type of component, measured, 
-write react code for a webpage that takes on this schematic design. Create a modern and sleek ui, using theme color and accent color 
-specified by the layout attribute of the json.
+CRITICAL REQUIREMENTS:
+Code Structure (Single-File Application):
+You must write the entire React application within a single file.
+Define all UI elements (e.g., navigation bar, accordion, buttons) as individual functional components within this same file.
 
+**Component Rendering:**
+* The main `App` component's return statement **must** be wrapped in a single root element, such as a `<div>` or a React Fragment (`<>...</>`), to avoid "Adjacent JSX" errors.
+
+**Data Integrity:**
+* You must use the **complete and entire** JSON object provided. Do not omit or alter any top-level keys or their nested data.
+
+  **Data Pre-processing:**
+    * Before rendering complex components, you must process flat JSON data into a usable structure. For the accordion, transform the `accordion.data` object into an array of objects, like `[{ heading: 'Is it free?', content: 'Yes...' }, ...]`. Then, iterate over this new array to build the component.
+
+**Library Usage:**
+* Do **not** import any external libraries like `react-router-dom`.
+* For navigation links, use standard HTML `<a>` tags with `href="#"`.
+* The only permitted import is from the `'react'` library itself (e.g., `useState`, `useEffect`, `useRef`).
+
+
+The main component must be named App, and it must be the only component exported from the file using export default App.
+The App component will be responsible for rendering all the other components to create the final page layout. Do not use any imports for local component files.
+Data Handling (Strict JSON Usage):
+
+You must use the provided JSON object as the single source for all text content, links, and image sources.
+To access content, you must directly reference the properties of the provided JSON object. For example, to get the button's label, the code should access jsonData.button.data.label.
+Do not use generic placeholder strings like 'placeholder', '[content goes here]', or reference undefined variables. If the JSON provides the text "Home" for a link, the final code must render the string "Home".
+
+Styling & Responsiveness:
+Use Tailwind CSS for all styling.
+The design must be responsive and fluid, designed to fill the user's entire browser viewport.
+The final webpage must not have a fixed width of 1000px. The JSON position and size attributes should only be used as a guide for relative placement, not for fixed pixel values.
+The overall theme color is specified in layout.Theme and the accent color is in layout.Accent. Use these colors throughout the application for backgrounds, buttons, and highlights.
+
+Component Implementation Details:
 NavBar:
-For the navBar component, Field 1-4 represents the clickable links in the top right hand side of the navbar. The logo represents the text that will appear on the top left hand side of the navbar. Please represent this with bolded and stylized text. The navBar should be sticky. 
+It must be a sticky navigation bar that stays at the top of the viewport on scroll.
+The logo text on the left side must come from navBar.data.Logo. Style it to be bold and prominent.
+The navigation links on the right side must be created from navBar.data.Field1, Field2, Field3, and Field4.
 
-Accordion:
-When the accordion is clicked, include a dropdown animation, where the fields Heading1, Heading2, Heading3 represent the label of each Accordion tab. When the dropdown animation is clicked, display the contents of Content1, Content2, Content3 respectively from the data field of the Accordion's json field.
+Image/Hero Section:
+Check the value of image.data.Hero. If it is true, use the image.data.src as a full-viewport background image for a hero section.
+If image.data.Hero is false, render a standard <img> tag using the image.data.src.
 
 Button:
-Place the button at the position specified by the measured attribute of the json. Have the button text as specified by the label section under data of the json. When the button is clicked, have it open an alert for now. 
-
-Picture:
-Display the picture represented by the src specified by the src attribute of the data field. In the data field, there are 2 options, src represents the source, and what photo should be displayed, while Hero represents if the picture is a hero section. When Hero is true, the given src is to be displayed as a background image that spans the viewport. If Hero is false, include the picture in the position given by the json, and size it to the measured width and height.
+Render a button with the text label from button.data.label.
+When the button is clicked, it must trigger a custom modal alert, not a native browser alert() function.
 
 navMenu:
-Create an interactive horizontal 3 sectioned menu putting Learn, Overview, and Github as section names. Include a downward arrow symbol on Learn and Overview. When the user hovers over a section, render a small info div with placeholder information for now.
+Create an interactive horizontal menu with three sections using the text from navMenu.data.Field1, Field2, and Field3.
+For "Learn" (Field1) and "Overview" (Field2), include a downward-pointing arrow icon next to the text.
+When a user hovers over any of the three sections, a small informational div should appear. For the content of this div, you can use placeholder text like: "More information about [Section Name]".
 
-
+Accordion:
+Create an accordion component. The labels for each tab must come from accordion.data.Heading1, Heading2, and Heading3.
+When a user clicks on a heading, its corresponding content (Content1, Content2, or Content3) should be revealed with a smooth dropdown animation.
+Here is the JSON data you must use

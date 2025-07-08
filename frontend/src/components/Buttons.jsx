@@ -221,8 +221,6 @@ function tokenize(text) {
         store.clearCodeChunks();
         const tokenized = tokenize(data.completion);
         store.addCodeChunk(tokenized);
-        const currentState = useStore.getState().codeChunks;
-        console.log("Current state of codeChunks in the store:", currentState);
 
         store.addLlmOutput({type: 'llm-response', language: 'javascript', message: data.completion});
 

@@ -41,7 +41,7 @@ function extractLatestCode() {
       if (codeBlock && codeBlock.code) {
         console.log(`Extracting code from ${key}.jsx:`, codeBlock.code);
         // Append .jsx to the filename key
-        return { [`${key}.js`]: { code: codeBlock.code } }; 
+        return { [`App.js`]: { code: codeBlock.code } }; 
       }
     }
   }
