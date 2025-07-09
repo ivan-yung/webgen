@@ -18,6 +18,25 @@ const ClearIcon = () => (
     <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM2 3.5C2 3.22386 2.22386 3 2.5 3H12.5C12.7761 3 13 3.22386 13 3.5C13 3.77614 12.7761 4 12.5 4H2.5C2.22386 4 2 3.77614 2 3.5ZM3 5.5C3 5.08954 3.38624 4.71429 3.83333 4.71429H11.1667C11.6138 4.71429 12 5.08954 12 5.5V12.5C12 13.3284 11.3284 14 10.5 14H4.5C3.67157 14 3 13.3284 3 12.5V5.5ZM4.71429 5.5V12.5C4.71429 12.6074 4.72381 12.705 4.75 12.7857H10.25C10.2762 12.705 10.2857 12.6074 10.2857 12.5V5.5H4.71429Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
 );
 
+function removeMarkdownCodeFences(inputText) {
+  // 1. Check if the input is a valid string. If not, return an empty string.
+  if (typeof inputText !== 'string') {
+    console.error("Input must be a string.");
+    return "";
+  }
+
+  // 2. Split the input string into an array of lines.
+  const lines = inputText.split('\n');
+
+  // 3. Filter out the lines that include the markdown code fence "```".
+  const filteredLines = lines.filter(line => !line.includes('```'));
+
+  // 4. Join the filtered lines back into a single string, separated by newlines.
+  const cleanedString = filteredLines.join('\n');
+
+  // 5. Return the cleaned string.
+  return cleanedString;
+}
 
 export default function LLMSidebar({ width, setWidth }) {
   const { output, clear, addMessage } = useStore(selector, shallow);
@@ -76,6 +95,7 @@ export default function LLMSidebar({ width, setWidth }) {
   const renderMessage = (entry, index) => {
     if (entry.language) {
       const isCopied = lastCopiedIndex === index;
+      const cleanedMessage = removeMarkdownCodeFences(entry.message);
       return (
         <div
           key={index}
@@ -98,7 +118,7 @@ export default function LLMSidebar({ width, setWidth }) {
               transition: 'border 0.2s ease-in-out',
             }}
           >
-            {entry.message}
+            {cleanedMessage}
           </SyntaxHighlighter>
         </div>
       );

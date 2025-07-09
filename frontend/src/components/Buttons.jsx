@@ -16,6 +16,8 @@ const selector = (store) => ({
     createNode: (type, position, data) => store.createNode(type, position, data),
     createImage: (type, position, data) => store.createImage(type, position, data),
     addLlmOutput: (message) => store.addLlmOutput(message),
+    addCodeChunk: (chunk) => store.addCodeChunk(chunk),
+    clearCodeChunks: store.clearCodeChunks,
 
     bezEdge: store.updateEdgesDefault,
     stepEdge: store.updateEdgesToSmoothstep,
@@ -106,6 +108,75 @@ function cleanGroqOutput(text) {
   return cleanedText;
 }
 
+function tokenize(text) {
+  console.log("======================================");
+  console.log("======================================");
+  console.log("======================================");
+  console.log("======================================");
+  console.log("===============TOKENIZE=======", text);
+
+
+
+  let tokenizedJSON = {};
+  let count = 0;
+  let textCount = 0;
+  let first = null;
+  let language = '';
+  let lastEnd = 0;
+  let inCodeBlock = false;
+
+  for (let i = 0; i < text.length; i++) {
+    if ((text[i] === '`') && (text[i + 1] === '`') && (text[i + 2] === '`')) {
+      count += 1;
+      if (count % 2 === 0) {
+        // End of code block
+        const codeBlock = text.slice(first, i);
+        tokenizedJSON[`codeBlock${count / 2}`] = {
+          code: codeBlock,
+          language: language.trim()
+        };
+        language = '';
+        lastEnd = i + 3;
+        inCodeBlock = false;
+      } else {
+        // Start of code block
+        // Capture any text before this code block, but only if not just whitespace
+        if (lastEnd < i) {
+          const textBlock = text.slice(lastEnd, i);
+          if (textBlock.trim().length > 0) {
+            textCount++;
+            tokenizedJSON[`textBlock${textCount}`] = {
+              text: textBlock.trim()
+            };
+          }
+        }
+        // Check for language identifier after opening backticks
+        let langStart = i + 3;
+        let langEnd = langStart;
+        while (langEnd < text.length && text[langEnd] !== '\n' && text[langEnd] !== '\r') {
+          langEnd++;
+        }
+        language = text.slice(langStart, langEnd);
+        first = langEnd + 1;
+        inCodeBlock = true;
+      }
+      i += 2; // Skip the next two backticks
+    }
+  }
+  // Capture any trailing text after the last code block
+  if (!inCodeBlock && lastEnd < text.length) {
+    const trailingText = text.slice(lastEnd);
+    if (trailingText.trim().length > 0) {
+      textCount++;
+      tokenizedJSON[`textBlock${textCount}`] = {
+        text: trailingText.trim()
+      };
+    }
+  }
+  console.log("Tokenized JSON:", tokenizedJSON);
+  return tokenizedJSON;
+}
+
   export default function Buttons(){
     const store = useStore(selector, shallow);
     const {logEdges, logStore} = useStore();
@@ -146,8 +217,12 @@ function cleanGroqOutput(text) {
         console.log('Groq API completion:', data.completion);
         setGeneratedCode(data.completion);
 
-        const parsedgroq = cleanGroqOutput(data.completion);
-        store.addLlmOutput({type: 'llm-response', language: 'javascript', message: parsedgroq});
+        // Ensure only storing new chunks
+        store.clearCodeChunks();
+        const tokenized = tokenize(data.completion);
+        store.addCodeChunk(tokenized);
+
+        store.addLlmOutput({type: 'llm-response', language: 'javascript', message: data.completion});
 
         setShowModal(true);
       

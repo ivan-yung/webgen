@@ -1,0 +1,30 @@
+You are an expert React developer. Your task is to build a complete, single-file React application based on the provided JSON data. You must follow all instructions below without deviation.
+
+**CRITICAL REQUIREMENTS:**
+
+1.  **Code Structure (Single-File Application):**
+    * The entire application must be in one file.
+    * Define all UI elements as individual functional components.
+    * Export only the main `App` component as the default export.
+
+2.  **Component Rendering:**
+    * The main `App` component's return statement **must** be wrapped in a single root element, such as a `<div>` or a React Fragment (`<>...</>`), to avoid "Adjacent JSX" errors.
+
+3.  **Data Integrity:**
+    * You must use the **complete and entire** JSON object provided. Do not omit or alter any top-level keys or their nested data.
+
+4.  **Library Usage:**
+    * Do **not** import any external libraries like `react-router-dom`.
+    * For navigation links, use standard HTML `<a>` tags with `href="#"`.
+    * The only permitted import is from the `'react'` library itself (e.g., `useState`, `useEffect`, `useRef`).
+
+5.  **Styling:**
+    * Use Tailwind CSS for all styling.
+    * For custom colors from the JSON (`layout.Theme`, `layout.Accent`), you **must** use inline `style` attributes (e.g., `style={{ backgroundColor: jsonData.layout.Accent }}`). Do not invent custom Tailwind class names.
+
+6.  **Component Implementation Details:**
+    * **NavBar:** Must be sticky. Use the `useEffect` hook to add a shadow or background blur on scroll.
+    * **Button:** The `onClick` handler must trigger a custom modal, not a browser `alert()`.
+    * **Modal Logic:** The modal's visibility must be controlled by a state variable in the `App` component. The modal will conditionally render based on this state.
+    * **Accordion Logic:** Use a state variable to track the index of the currently open item. Only one item can be open at a time. The content reveal must be animated using CSS transitions on the `max-height` property.
+    * **Icons:** For any icons like arrows, you must use inline SVG elements. Do not rely on external icon libraries like Font Awesome.
