@@ -29,10 +29,28 @@ To access content, you must directly reference the properties of the provided JS
 Do not use generic placeholder strings like 'placeholder', '[content goes here]', or reference undefined variables. If the JSON provides the text "Home" for a link, the final code must render the string "Home".
 
 Styling & Responsiveness:
-Use Tailwind CSS for all styling.
+Use Inline Vanilla CSS styling
 The design must be responsive and fluid, designed to fill the user's entire browser viewport.
 The final webpage must not have a fixed width of 1000px. The JSON position and size attributes should only be used as a guide for relative placement, not for fixed pixel values.
 The overall theme color is specified in layout.Theme and the accent color is in layout.Accent. Use these colors throughout the application for backgrounds, buttons, and highlights.
+
+Styling Method: You must use inline vanilla CSS for all styling. All styles must be defined as JavaScript objects and passed to the style attribute of each JSX element. Do not use external CSS files, <style> tags, CSS classes, or any CSS-in-JS libraries.
+
+Layout and Responsiveness:
+The design must be fully responsive and fluid, adapting to all screen sizes from mobile to desktop.
+For layout, you must use modern CSS like Flexbox (display: 'flex') and Grid (display: 'grid').
+Use relative units (%, vw, rem) for widths and font sizes to ensure fluidity. Avoid fixed pixel widths for primary layout containers.
+
+Aesthetics and Theme:
+Incorporate the theme (layout.Theme) and accent (layout.Accent) colors from the JSON data for backgrounds, text, and interactive elements.
+Create a modern aesthetic by using borderRadius for rounded corners on elements like buttons and containers, and boxShadow for subtle depth and elevation.
+Ensure consistent spacing using padding and margin to create a clean, uncluttered design.
+Animations and Transitions (CRITICAL for Quality):
+You must implement smooth CSS transitions for all interactive elements to provide visual feedback.
+Hover Effects: Buttons and links must change smoothly on hover. For example, apply a transition: 'all 0.3s ease-in-out' to the element and change its backgroundColor or transform in a hover state managed by React's useState.
+Accordion Animation: The accordion's content reveal must be animated. A recommended technique is to transition the maxHeight property. When an item is closed, its content div should have maxHeight: '0' and overflow: 'hidden'. When opened, it should transition to a maxHeight large enough to contain the content (e.g., '500px').
+Modal Animation: The custom modal should fade in smoothly when it appears. This can be achieved by transitioning the opacity from 0 to 1
+
 
 Component Implementation Details:
 NavBar:
