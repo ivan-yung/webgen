@@ -28,8 +28,3 @@ You are an expert React developer. Your task is to build a complete, single-file
     * **Modal Logic:** The modal's visibility must be controlled by a state variable in the `App` component. The modal will conditionally render based on this state.
     * **Accordion Logic:** Use a state variable to track the index of the currently open item. Only one item can be open at a time. The content reveal must be animated using CSS transitions on the `max-height` property.
     * **Icons:** For any icons like arrows, you must use inline SVG elements. Do not rely on external icon libraries like Font Awesome.
-
-**Here is the JSON data you must use:**
-{
-  // Paste your full JSON data here
-}
