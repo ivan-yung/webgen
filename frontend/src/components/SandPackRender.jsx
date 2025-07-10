@@ -1,6 +1,12 @@
 import React from 'react';
 import { Sandpack } from "@codesandbox/sandpack-react";
 
+import {
+  SandpackProvider,
+  SandpackLayout,
+  SandpackPreview,
+} from "@codesandbox/sandpack-react";
+
 // Define the default "Hello World" code as a constant
 const defaultFiles = {
   "/App.js": `export default function App() {
@@ -22,10 +28,15 @@ const SandPackRender = ({ code }) => {
       template="react"
       options={{
         activeFile: activeFileName,
-        // You can add other options here, like making the editor read-only
-        // readOnly: true, 
+        showLineNumbers: false, // default - true
+        showInlineErrors: true, // default - false
+        wrapContent: true, // default - false
+        editorHeight: 750, // default - 300
+        editorWidthPercentage: 30, // default - 50
+
       }}
     />
+
   );
 };
 
