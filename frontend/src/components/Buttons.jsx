@@ -198,7 +198,7 @@ function tokenize(text) {
       const instructions = prompt;
 
       try {
-        const response = await fetch('/api/groq', {
+        const response = await fetch('/api/gemini', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -280,6 +280,41 @@ function tokenize(text) {
 
     return(
       <>
+        {/* Loading Modal Overlay */}
+        {isLoading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-2xl p-8 drop-shadow-2xl animate-fade-in-up">
+              {/* Cute animated fish SVG with swimming animation */}
+              <div className="mb-4">
+                <svg className="w-20 h-20 animate-swim" viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g>
+                    <ellipse cx="32" cy="16" rx="18" ry="10" fill="#60a5fa" />
+                    <ellipse cx="48" cy="16" rx="6" ry="4" fill="#3b82f6" />
+                    <ellipse cx="16" cy="16" rx="6" ry="4" fill="#3b82f6" />
+                    <circle cx="40" cy="14" r="2" fill="#fff" />
+                    <circle cx="40" cy="14" r="1" fill="#1e293b" />
+                    <polygon points="58,16 64,12 64,20" fill="#60a5fa" />
+                  </g>
+                </svg>
+                <style>{`
+                  @keyframes swim {
+                    0% { transform: translateX(0) scaleY(1); }
+                    25% { transform: translateX(5px) scaleY(0.95); }
+                    50% { transform: translateX(0) scaleY(1.05); }
+                    75% { transform: translateX(-5px) scaleY(0.95); }
+                    100% { transform: translateX(0) scaleY(1); }
+                  }
+                  .animate-swim { animation: swim 1.5s infinite cubic-bezier(0.4,0,0.2,1); }
+                `}</style>
+              </div>
+              {/* Loading spinner */}
+              <div className="w-12 h-12 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-4 shadow-lg"></div>
+              {/* Loading message */}
+              <div className="text-lg font-semibold text-blue-700 mb-1">Generating your magical site...</div>
+              <div className="text-sm text-gray-500">Our AI fish is swimming through code. Please wait a moment!</div>
+            </div>
+          </div>
+        )}
         <div className="fixed top-0 left-0 z-50 flex items-center h-[64px] bg-transparent select-none" style={{minWidth: '200px'}}>
           <span className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 drop-shadow ml-4" style={{fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.12em'}}>
             Vi<span className="text-blue-500">b</span><span className="text-purple-500">e</span><span className="text-pink-500">Web</span>
