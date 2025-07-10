@@ -48,7 +48,7 @@ export default function App() {
             className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition"
             onClick={() => setShowReactFlow((prev) => !prev)}
           >
-            {showReactFlow ? 'Show Rendered Code' : 'Show ReactFlow'}
+            {showReactFlow ? '⟳ Code Editor' : '⟲ Show Visual Flow'}
           </button>
         </div>
       </div>
