@@ -76,6 +76,35 @@ export const useStore = createWithEqualityFn((set, get) => ({
     });
   },
 
+  // //imageStore:
+  // imageStore: [],
+  // //Stores 64 bit image to store
+  // //@id: uniqueID
+  // //@imgData: base64 image data
+  // storeImage(index, imgData) {
+  //   const id = index;
+  //   const edge = { id, ...imgData };
+ 
+  //   set({ imageStore: [edge, ...get().imageStore] });
+  // },
+
+
+  // getImageStore: () => get().imageStore,
+
+
+    imageStore: {}, // Add the image store to your state
+
+  // Action to add an image to the store
+  addImageToStore: (id, imgData) => set((state) => ({
+    imageStore: {
+      ...state.imageStore,
+      [id]: { imgData },
+    },
+  })),
+
+  // Action to clear all images
+  clearImageStore: () => set({ imageStore: {} }),
+
 
   updateNode(id, data) {
     set({
