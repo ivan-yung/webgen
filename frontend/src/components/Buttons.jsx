@@ -86,27 +86,33 @@ export default function Buttons(){
           };
           break;
         case 'backgroundPicture': {
-          const uniqueId = raw[i].id || nanoid(6);
-          if (
-            raw[i].data.src !==
-            'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80'
-          ) {
-            parsed.image = {
-              position: raw[i].position,
-              src: uniqueId,
-              size: raw[i].measured,
-              Hero: raw[i].data.Hero,
-            };
-            addImageToStore(uniqueId, raw[i].data.src);
-            console.log('Storing image locally:', uniqueId, raw[i].data.src);
-          } else {
-            parsed.image = {
+             parsed.image = {
               position: raw[i].position,
               src: raw[i].data.src,
               size: raw[i].measured,
               Hero: raw[i].data.Hero,
             };
-          }
+//           const uniqueId = raw[i].id || nanoid(6);
+//           if (
+//             raw[i].data.src !==
+//             'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80'
+//           ) {
+//             parsed.image = {
+//               position: raw[i].position,
+//               src: uniqueId,
+//               size: raw[i].measured,
+//               Hero: raw[i].data.Hero,
+//             };
+//             addImageToStore(uniqueId, raw[i].data.src);
+//             console.log('Storing image locally:', uniqueId, raw[i].data.src);
+//           } else {
+//             parsed.image = {
+//               position: raw[i].position,
+//               src: raw[i].data.src,
+//               size: raw[i].measured,
+//               Hero: raw[i].data.Hero,
+//             };
+//           }
           break;
         }
         case 'button':
@@ -122,7 +128,7 @@ export default function Buttons(){
     return parsed;
   }
 
-  function tokenize(text, imageStore) {
+  function tokenize(text) {
     let tokenizedJSON = {};
     let count = 0;
     let textCount = 0;
@@ -175,27 +181,6 @@ export default function Buttons(){
       }
     }
     
-    // **MODIFICATION START**
-    // Replace uniqueId placeholders with actual base64 image data from local imageStore
-    if (imageStore) {
-        Object.values(tokenizedJSON).forEach((block) => {
-            // Only process blocks that contain code
-            if (block && block.code) {
-                // Check each stored image ID against the code block
-                Object.keys(imageStore).forEach((uniqueId) => {
-                    if (block.code.includes(uniqueId)) {
-                        const imgData = imageStore[uniqueId].imgData;
-                        console.log(`Replacing ${uniqueId} in code block...`);
-                        // Use a regular expression with the 'g' flag to replace all occurrences
-                        // of the uniqueId (when enclosed in quotes) with the base64 data.
-                        const regex = new RegExp(`"${uniqueId}"`, 'g');
-                        // We replace it with the base64 string wrapped in backticks to handle special characters.
-                        block.code = block.code.replace(regex, `\`${imgData}\``);
-                    }
-                });
-            }
-        });
-    }
     // **MODIFICATION END**
 
     return tokenizedJSON;
@@ -236,7 +221,7 @@ export default function Buttons(){
         // Ensure only storing new chunks
         store.clearCodeChunks();
         // **MODIFICATION** Pass the image store to the tokenizer
-        const tokenized = tokenize(data.completion, getImageStore());
+        const tokenized = tokenize(data.completion);
         console.log('Sending to Display: ', tokenized);
         store.addCodeChunk(tokenized);
 
