@@ -7,7 +7,7 @@ import "../styles/NavMenuStyles.css";
 const NavigationMenuDemo = () => {
 	return (
 
-		<div className="flex justify-center">
+		<div className="flex justify-center zIndex-100" style={{ zIndex: 100, position: "relative" }}>
 		<NavigationMenu.Root className="NavigationMenuRoot">
 			<NavigationMenu.List className="NavigationMenuList">
 				<NavigationMenu.Item>
