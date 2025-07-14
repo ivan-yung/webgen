@@ -61,10 +61,6 @@ The navigation links on the right side must be created from navBar.data.Field1, 
 Image/Hero Section:
 Check the value of image.data.Hero. If it is true, use the image.data.src as a full-viewport background image for a hero section.
 If image.data.Hero is false, render a standard <img> tag using the image.data.src.
-* The `src` value for any image provided in the JSON data (e.g., `image.data.src`) will be a unique placeholder ID string, such as `"abc123"`. This is **not** a real image URL or a Base64 string.
-* **You MUST use this exact placeholder ID string as the value for the `src` attribute in the React component you generate.**
-* For example, if the input JSON is `{ "src": "xyz987" }`, your code must output an element that renders `src="xyz987"`.
-* Do not alter, interpret, or try to create a path from this ID. A separate process will use this ID to find and insert the correct image data later.
 
 Button:
 Render a button with the text label from button.data.label.
