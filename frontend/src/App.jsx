@@ -35,35 +35,47 @@ const nodeTypes = {
 
 export default function App() {
   const [sidebarWidth, setSidebarWidth] = useState(384);
+  const [showReactFlow, setShowReactFlow] = useState(true);
   const store = useStore(selector, shallow);
 
   return (
     <>
     <div className="flex flex-col h-screen w-screen">
       <div className="flex-shrink-0">
-      <Buttons />
+        <Buttons />
+        <div className="flex justify-center mt-2">
+          <button
+            className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 transition"
+            onClick={() => setShowReactFlow((prev) => !prev)}
+          >
+            {showReactFlow ? '⟳ Code Editor' : '⟲ Show Visual Flow'}
+          </button>
+        </div>
       </div>
       <div className="flex flex-1 min-h-0">
         <div className="flex-1 min-h-0">
-          <ReactFlow
-            nodes={store.nodes}
-            nodeTypes={nodeTypes}
-            edges={store.edges}
-            onNodesChange={store.onNodesChange}
-            onEdgesChange={store.onEdgesChange}
-            onConnect={store.addEdge}
-          >
-          </ReactFlow>
+          {showReactFlow ? (
+            <ReactFlow
+              nodes={store.nodes}
+              nodeTypes={nodeTypes}
+              edges={store.edges}
+              onNodesChange={store.onNodesChange}
+              onEdgesChange={store.onEdgesChange}
+              onConnect={store.addEdge}
+            >
+            </ReactFlow>
+          ) : (
+            <div className="w-full h-full">
+              <RenderCode code={store.llmOutput || store.code} />
+            </div>
+          )}
         </div>
-        <LLMSidebar 
-        width = {sidebarWidth}
-        setWidth = {setSidebarWidth}
+        <LLMSidebar
+          width={sidebarWidth}
+          setWidth={setSidebarWidth}
         />
       </div>
-      <div className="">
-        <RenderCode code={store.llmOutput || store.code} />
-      </div>
     </div>
-  </>
+    </>
   );
 }
