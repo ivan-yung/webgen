@@ -4,9 +4,8 @@ import { Handle, Position, NodeResizer, NodeToolbar } from '@xyflow/react';
 import "../styles/RadixPictureStyles.css";
 import { Button } from "../components/ui/button";
 import { useStore } from '../store';
-import { Checkbox } from "../components/ui/checkbox";
-
-const RadixPicture = ({ id, width, height, selected, data, zIndex }) => { // <-- zIndex is passed as a prop by React Flow
+import { Checkbox } from "../components/ui/checkbox"
+const RadixPicture = ({ id, width, height, selected, data }) => {
   // Get updateNode from the store
   const updateNode = useStore((state) => state.updateNode);
 
@@ -58,7 +57,6 @@ const RadixPicture = ({ id, width, height, selected, data, zIndex }) => { // <--
   const isHero = data.Hero || false;
 
   return (
-    // The zIndex is now controlled by the node's top-level zIndex property
     <div className="Container" style={{ width: width, height: height }}>
       <NodeToolbar
         isVisible={selected}
@@ -127,7 +125,7 @@ const RadixPicture = ({ id, width, height, selected, data, zIndex }) => { // <--
           background: 'white',
           borderRadius: '16px',
           boxShadow: '0 8px 32px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.12)',
-          zIndex: 9999, // Keep this high to appear over the entire UI
+          zIndex: 9999,
           padding: '2rem',
           minWidth: '320px',
           maxWidth: '90vw',

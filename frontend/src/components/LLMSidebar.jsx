@@ -44,6 +44,17 @@ export default function LLMSidebar({ width, setWidth }) {
   const [lastCopiedIndex, setLastCopiedIndex] = useState(null);
   const [userInput, setUserInput] = useState('');
   const [isSending, setIsSending] = useState(false);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const copyHandler = (codeToCopy, index) => {
     if (codeToCopy) {
@@ -151,77 +162,99 @@ export default function LLMSidebar({ width, setWidth }) {
 
   // The ResizableBox now correctly wraps the entire sidebar content in the main return statement.
   return (
-    <ResizableBox
-        width={width}
-        height={Infinity}
-        onResize={(e, data) => setWidth(data.size.width)}
-        axis="x"
-        resizeHandles={['w']}
-        minConstraints={[250, Infinity]}
-        maxConstraints={[1000, Infinity]}
-        className="h-full bg-gray-50 flex flex-col border-l border-gray-300"
-    >
-        <div className="p-2 border-b border-gray-300 flex items-center justify-between bg-gray-100 flex-shrink-0">
-          <h2 className="font-semibold text-sm text-gray-700">LLM Console</h2>
-          <button 
-            onClick={clear}
-            title="Clear console" 
-            className="text-gray-600 hover:text-black"
-          >
-            <ClearIcon />
-          </button>
-        </div>
+    <>
+      {!isMobile && !sidebarVisible && (
+        <button
+          className="fixed right-2 z-[10000] px-3 py-1 text-xs bg-blue-500 text-white rounded shadow-md"
+          style={{ transform: 'translateY(-50%)' }}
+          onClick={() => setSidebarVisible(true)}
+        >
+          Vibe with Chat!
+        </button>
+      )}
+      {!isMobile && sidebarVisible && (
+        <ResizableBox
+          width={width}
+          height={Infinity}
+          onResize={(e, data) => setWidth(data.size.width)}
+          axis="x"
+          resizeHandles={['w']}
+          minConstraints={[250, Infinity]}
+          maxConstraints={[1000, Infinity]}
+          className="h-full bg-gray-50 flex flex-col border-l border-gray-300"
+        >
+          <div className="p-2 border-b border-gray-300 flex items-center justify-between bg-gray-100 flex-shrink-0">
+            <h2 className="font-semibold text-sm text-gray-700">LLM Console</h2>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setSidebarVisible(v => !v)}
+                className="px-2 py-1 text-xs bg-blue-500 text-white rounded shadow-md"
+                title={sidebarVisible ? 'Hide LLM Sidebar' : 'Show LLM Sidebar'}
+              >
+                {sidebarVisible ? 'Hide' : 'Show'}
+              </button>
+              <button 
+                onClick={clear}
+                title="Clear console" 
+                className="text-gray-600 hover:text-black"
+              >
+                <ClearIcon />
+              </button>
+            </div>
+          </div>
 
-        <div ref={scrollRef} className="flex-grow overflow-y-auto">
-          {output.length > 0 ? output.map(renderMessage) : (
-               <div className="p-4 text-center text-sm text-gray-400">No output yet.</div>
-          )}
-        </div>
-        
-        <div className="p-1 border-t border-gray-300 flex-shrink-0">
-          <form
-            className="flex gap-2 p-2 border-t border-gray-300 bg-gray-50"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              if (!userInput.trim()) return;
-              addMessage({ type: 'user', message: userInput });
-              setIsSending(true);
-              try {
-                // Send to backend
-                const response = await fetch('/api/groq', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ instructions: userInput }),
-                });
-                const data = await response.json();
-                addMessage({
-                  type: 'llm-response',
-                  language: 'javascript',
-                  message: data.completion,
-                });
-              } catch (err) {
-                addMessage({ type: 'error', message: 'Failed to get LLM response.' });
-              }
-              setIsSending(false);
-              setUserInput('');
-            }}
-          >
-            <input
-              className="flex-1 p-1 text-sm border rounded"
-              value={userInput}
-              onChange={e => setUserInput(e.target.value)}
-              placeholder="Type a message..."
-              disabled={isSending}
-            />
-            <button
-              type="submit"
-              className="px-3 py-1 text-xs bg-blue-500 text-white rounded disabled:opacity-50"
-              disabled={isSending || !userInput.trim()}
+          <div ref={scrollRef} className="flex-grow overflow-y-auto">
+            {output.length > 0 ? output.map(renderMessage) : (
+                 <div className="p-4 text-center text-sm text-gray-400">No output yet.</div>
+            )}
+          </div>
+          
+          <div className="p-1 border-t border-gray-300 flex-shrink-0">
+            <form
+              className="flex gap-2 p-2 border-t border-gray-300 bg-gray-50"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!userInput.trim()) return;
+                addMessage({ type: 'user', message: userInput });
+                setIsSending(true);
+                try {
+                  // Send to backend
+                  const response = await fetch('/api/groq', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ instructions: userInput }),
+                  });
+                  const data = await response.json();
+                  addMessage({
+                    type: 'llm-response',
+                    language: 'javascript',
+                    message: data.completion,
+                  });
+                } catch (err) {
+                  addMessage({ type: 'error', message: 'Failed to get LLM response.' });
+                }
+                setIsSending(false);
+                setUserInput('');
+              }}
             >
-              {isSending ? 'Sending...' : 'Send'}
-            </button>
-          </form>
-        </div>
-    </ResizableBox>
+              <input
+                className="flex-1 p-1 text-sm border rounded"
+                value={userInput}
+                onChange={e => setUserInput(e.target.value)}
+                placeholder="Type a message..."
+                disabled={isSending}
+              />
+              <button
+                type="submit"
+                className="px-3 py-1 text-xs bg-blue-500 text-white rounded disabled:opacity-50"
+                disabled={isSending || !userInput.trim()}
+              >
+                {isSending ? 'Sending...' : 'Send'}
+              </button>
+            </form>
+          </div>
+        </ResizableBox>
+      )}
+    </>
   );
 }
