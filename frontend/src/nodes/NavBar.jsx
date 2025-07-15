@@ -22,11 +22,11 @@ const NavBar = ({ selected, id, data }) => {
     // Effect to synchronize local state with prop data if 'data' prop changes externally
     useEffect(() => {
         setSettings({
-            Field1: data?.Field1 || "Home",
-            Field2: data?.Field2 || "Features",
-            Field3: data?.Field3 || "Pricing",
-            Field4: data?.Field4 || "About",
-            Logo: data?.Logo || "WebProducer",
+            Field1: data?.Field1 ?? "Home",
+            Field2: data?.Field2 ?? "Features",
+            Field3: data?.Field3 ?? "Pricing",
+            Field4: data?.Field4 ?? "About",
+            Logo: data?.Logo ?? "WebProducer",
         });
     }, [data]); // Re-run this effect whenever the 'data' prop changes
 

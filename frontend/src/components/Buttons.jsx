@@ -282,6 +282,15 @@ export default function Buttons(){
       );
     }
 
+    // Detect mobile view
+    const [isMobile, setIsMobile] = useState(false);
+    React.useEffect(() => {
+      const handleResize = () => setIsMobile(window.innerWidth <= 768);
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     return(
       <>
         {/* Loading Modal Overlay */}
@@ -319,25 +328,28 @@ export default function Buttons(){
             </div>
           </div>
         )}
-        <div className="fixed top-0 left-0 z-50 flex items-center h-[64px] bg-transparent select-none" style={{minWidth: '200px'}}>
+        {/* Logo: hidden on mobile */}
+        <div className="fixed top-0 left-0 z-50 flex items-center h-[64px] bg-transparent select-none min-w-[200px] hidden md:flex">
           <span className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 drop-shadow ml-4" style={{fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.12em'}}>
             Vi<span className="text-blue-500">b</span><span className="text-purple-500">e</span><span className="text-pink-500">Web</span>
           </span>
         </div>
-        <div className="flex justify-center items-center gap-2 bg-gray-100 p-2 rounded-md shadow-md w-full pl-[220px]">
-          {/* Buttons bar, shifted right to make space for fixed logo */}
+        {/* Buttons bar: centered on mobile, left on desktop */}
+        <div className="w-full flex justify-center items-center gap-2 bg-gray-100 p-2 rounded-md shadow-md md:pl-[220px] flex-wrap">
+          {/* Buttons bar, shifted right to make space for fixed logo on desktop */}
           <Button 
             variant="outline" 
             onClick={GenerateHandler}
-            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold border-blue-300 shadow transition-colors duration-150 px-5 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold border-blue-300 shadow transition-colors duration-150 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 px-5 py-2 md:px-5 md:py-2"
+            style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}
           >
             {isLoading ? '🪄 Generating...' : '🪄 Generate'}
           </Button>
-          <Button variant="outline" onClick={createNavBar}>Nav</Button>
-          <Button variant="outline" onClick={createNavMenu}>NavMenu</Button>
-          <Button variant="outline" onClick={createaccordion}>accordion</Button>
-          <Button variant="outline" onClick={createPicture}>Picture</Button>
-          <Button variant="outline" onClick={createButton}>Button</Button>
+          <Button variant="outline" onClick={createNavBar} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Nav</Button>
+          <Button variant="outline" onClick={createNavMenu} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>NavMenu</Button>
+          <Button variant="outline" onClick={createaccordion} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>accordion</Button>
+          <Button variant="outline" onClick={createPicture} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Picture</Button>
+          <Button variant="outline" onClick={createButton} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Button</Button>
         </div>
 
         {error && 

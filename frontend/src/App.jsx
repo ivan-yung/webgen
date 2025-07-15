@@ -9,7 +9,7 @@ import './styles/index.css';
 import Buttons from './components/Buttons.jsx';
 import LLMSidebar from './components/LLMSidebar.jsx'; // Import the new sidebar
 import NavBar from './nodes/NavBar.jsx';
-import NavMenu from './nodes/NavMenu.jsx';
+import NavMenu from './nodes/NavMenu.tsx';
 import Accordion from './nodes/RadixAccordion.jsx';
 import RadixPicture from './nodes/RadixPicture.jsx';
 import Button from './nodes/Button.jsx';
