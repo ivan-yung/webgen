@@ -64,7 +64,7 @@ If image.data.Hero is false, render a standard <img> tag using the image.data.sr
 
 Button:
 Render a button with the text label from button.data.label.
-When the button is clicked, it must trigger a custom modal alert, not a native browser alert() function.
+When the button is clicked, send the user an alert that the button is clicked.
 
 navMenu:
 Create an interactive horizontal menu with three sections using the text from navMenu.data.Field1, Field2, and Field3.

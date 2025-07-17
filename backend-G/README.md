@@ -1,1 +1,1 @@
-export $(cat .env | xargs) && go run hello.go
+export $(cat .env | xargs)
