@@ -20,9 +20,10 @@ const selector = (store) => ({
     addLlmOutput: (message) => store.addLlmOutput(message),
     addCodeChunk: (chunk) => store.addCodeChunk(chunk),
     storeImage: (index, imgData) => store.storeImage(index, imgData),
+    tokenize: (text) => store.tokenize(text),
+    clearCodeChunks: store.clearCodeChunks,
 
 
-    getImageStore: store.getImageStore,
     clearCodeChunks: store.clearCodeChunks,
 
     bezEdge: store.updateEdgesDefault,
@@ -46,15 +47,6 @@ export default function Buttons(){
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // Local image store (not in Zustand)
-  const imageStoreRef = React.useRef({});
-  const addImageToStore = (index, imgData) => {
-    imageStoreRef.current[index] = { imgData };
-  };
-  const clearImageStore = () => {
-    imageStoreRef.current = {};
-  };
-  const getImageStore = () => imageStoreRef.current;
 
   function parseJson(raw) {
     const len = raw.length;
@@ -92,27 +84,6 @@ export default function Buttons(){
               size: raw[i].measured,
               Hero: raw[i].data.Hero,
             };
-//           const uniqueId = raw[i].id || nanoid(6);
-//           if (
-//             raw[i].data.src !==
-//             'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=300&dpr=2&q=80'
-//           ) {
-//             parsed.image = {
-//               position: raw[i].position,
-//               src: uniqueId,
-//               size: raw[i].measured,
-//               Hero: raw[i].data.Hero,
-//             };
-//             addImageToStore(uniqueId, raw[i].data.src);
-//             console.log('Storing image locally:', uniqueId, raw[i].data.src);
-//           } else {
-//             parsed.image = {
-//               position: raw[i].position,
-//               src: raw[i].data.src,
-//               size: raw[i].measured,
-//               Hero: raw[i].data.Hero,
-//             };
-//           }
           break;
         }
         case 'button':
@@ -124,66 +95,7 @@ export default function Buttons(){
           break;
       }
     }
-    console.log('Local imageStore:', getImageStore());
     return parsed;
-  }
-
-  function tokenize(text) {
-    let tokenizedJSON = {};
-    let count = 0;
-    let textCount = 0;
-    let first = null;
-    let language = '';
-    let lastEnd = 0;
-    let inCodeBlock = false;
-    for (let i = 0; i < text.length; i++) {
-      if ((text[i] === '`') && (text[i + 1] === '`') && (text[i + 2] === '`')) {
-        count += 1;
-        if (count % 2 === 0) {
-          const codeBlock = text.slice(first, i);
-          tokenizedJSON[`codeBlock${count / 2}`] = {
-            code: codeBlock,
-            language: language.trim()
-          };
-          language = '';
-          lastEnd = i + 3;
-          inCodeBlock = false;
-        } else {
-          if (lastEnd < i) {
-            const textBlock = text.slice(lastEnd, i);
-            if (textBlock.trim().length > 0) {
-              textCount++;
-              tokenizedJSON[`textBlock${textCount}`] = {
-                text: textBlock.trim()
-              };
-            }
-          }
-          let langStart = i + 3;
-          let langEnd = langStart;
-          while (langEnd < text.length && text[langEnd] !== '\n' && text[langEnd] !== '\r') {
-            langEnd++;
-          }
-          language = text.slice(langStart, langEnd);
-          first = langEnd + 1;
-          inCodeBlock = true;
-        }
-        i += 2;
-      }
-    }
-
-    if (!inCodeBlock && lastEnd < text.length) {
-      const trailingText = text.slice(lastEnd);
-      if (trailingText.trim().length > 0) {
-        textCount++;
-        tokenizedJSON[`textBlock${textCount}`] = {
-          text: trailingText.trim()
-        };
-      }
-    }
-    
-    // **MODIFICATION END**
-
-    return tokenizedJSON;
   }
 
     const GenerateHandler = async () => {
@@ -191,7 +103,6 @@ export default function Buttons(){
       setError(null);
       const rawLayout = logStore();
       console.log(rawLayout);
-      
       //parse rawLayout
       const layout = parseJson(rawLayout, store);
       console.log(layout);
@@ -220,16 +131,20 @@ export default function Buttons(){
 
         // Ensure only storing new chunks
         store.clearCodeChunks();
-        // **MODIFICATION** Pass the image store to the tokenizer
-        const tokenized = tokenize(data.completion);
+        // Call tokenize from zustand store
+        const tokenized = store.tokenize(data.completion);
         console.log('Sending to Display: ', tokenized);
         store.addCodeChunk(tokenized);
+        // Add notification textBlock after LLM response
+        const notifyKey = `textBlock${Object.keys(tokenized).length + 1}`;
+        store.addCodeChunk({ [notifyKey]: { text: 'LLM generated code! View in Code Editor with the button above!' } });
 
 
-        store.addLlmOutput({type: 'llm-response', language: 'javascript', message: data.completion});
+        //store.addLlmOutput({type: 'llm-response', language: 'javascript', message: data.completion});
 
         setShowModal(true);
-      
+        
+
       } catch (error) {
         console.error('Error:', error);
         setError(error.message);

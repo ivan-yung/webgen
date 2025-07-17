@@ -32,7 +32,7 @@ const RenderCode = () => {
 
   // 'code' is llmOutput array from Zustand
   const latestCode = extractLatestCode();
-
+  console.log('Latest Code:', latestCode);
 
   return (
       <>
