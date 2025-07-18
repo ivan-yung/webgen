@@ -7,7 +7,7 @@ import { useStore } from './store';
 
 import './styles/index.css';
 import Buttons from './components/Buttons.jsx';
-import LLMSidebar from './components/LLMSidebar.jsx'; // Import the new sidebar
+import LLMSidebar from './components/LLMSidebar.jsx';
 import NavBar from './nodes/NavBar.jsx';
 import NavMenu from './nodes/NavMenu.tsx';
 import Accordion from './nodes/RadixAccordion.jsx';

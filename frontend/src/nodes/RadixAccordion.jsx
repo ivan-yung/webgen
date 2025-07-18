@@ -5,7 +5,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import "../styles/RadixAccordianStyles.css";
 import { useStore } from '../store'; // Adjust this path!
 
-const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
+const RadixAccordion = ({ selected, id }) => {
     // State to manage whether the form is shown or not
     const [showForm, setShowForm] = React.useState(false);
 
@@ -13,52 +13,39 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
     const updateNode = useStore((state) => state.updateNode);
     const nodes = useStore((state) => state.nodes);
 
-    // Function to get initial accordion data from the specified node
-    const getInitialAccordionDataFromNode = React.useCallback(() => {
+    // Memoize accordion data to avoid unnecessary recalculation
+    const accordionData = React.useMemo(() => {
         const targetNode = nodes.find(node => node.id === id);
         if (targetNode && targetNode.data) {
-            // Reconstruct accordionData from flat node data fields
             return [
                 { id: "item-1", heading: targetNode.data.Heading1 || "Is it accessible?", content: targetNode.data.Content1 || "Yes. It adheres to the WAI-ARIA design pattern." },
                 { id: "item-2", heading: targetNode.data.Heading2 || "Is it unstyled?", content: targetNode.data.Content2 || "Yes. It's unstyled by default, giving you freedom over the look and feel." },
                 { id: "item-3", heading: targetNode.data.Heading3 || "Can it be animated?", content: targetNode.data.Content3 || "Yes! You can animate the Accordion with CSS or JavaScript." },
             ];
         }
-        // Fallback to default if node or data is not found
         return [
             { id: "item-1", heading: "Is it accessible?", content: "Yes. It adheres to the WAI-ARIA design pattern." },
             { id: "item-2", heading: "Is it unstyled?", content: "Yes. It's unstyled by default, giving you freedom over the look and feel." },
             { id: "item-3", heading: "Can it be animated?", content: "Yes! You can animate the Accordion with CSS or JavaScript." },
         ];
-    }, [id, nodes]); // Depend on id and nodes to re-run if they change
+    }, [id, nodes]);
 
-    // State to hold the dynamic content for the accordion
-    const [accordionData, setAccordionData] = React.useState(getInitialAccordionDataFromNode());
+    // State to hold form input values (only when form is open)
+    const [formInput, setFormInput] = React.useState(null);
 
-    // State to hold form input values
-    const [formInput, setFormInput] = React.useState({
-        heading1: accordionData[0].heading,
-        content1: accordionData[0].content,
-        heading2: accordionData[1].heading,
-        content2: accordionData[1].content,
-        heading3: accordionData[2].heading,
-        content3: accordionData[2].content,
-    });
-
-    // Effect to update accordionData and formInput when the node data in Zustand changes
+    // When the form is opened, initialize formInput from accordionData
     React.useEffect(() => {
-        const updatedData = getInitialAccordionDataFromNode();
-        setAccordionData(updatedData);
-        setFormInput({
-            heading1: updatedData[0].heading,
-            content1: updatedData[0].content,
-            heading2: updatedData[1].heading,
-            content2: updatedData[1].content,
-            heading3: updatedData[2].heading,
-            content3: updatedData[2].content,
-        });
-    }, [nodes, id, getInitialAccordionDataFromNode]);
-
+        if (showForm) {
+            setFormInput({
+                heading1: accordionData[0].heading,
+                content1: accordionData[0].content,
+                heading2: accordionData[1].heading,
+                content2: accordionData[1].content,
+                heading3: accordionData[2].heading,
+                content3: accordionData[2].content,
+            });
+        }
+    }, [showForm, accordionData]);
 
     // Handle button click to show the form
     const handleButtonClick = () => {
@@ -74,21 +61,12 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
         }));
     };
 
-    // Handle form submission to update accordion data and Zustand store
+    // Handle form submission to update Zustand store
     const handleFormSubmit = (e) => {
         e.preventDefault();
-
-        // Update local accordionData state
-        const newAccordionData = [
-            { id: "item-1", heading: formInput.heading1, content: formInput.content1 },
-            { id: "item-2", heading: formInput.heading2, content: formInput.content2 },
-            { id: "item-3", heading: formInput.heading3, content: formInput.content3 },
-        ];
-        setAccordionData(newAccordionData);
-        setShowForm(false); // Hide the form after submission
-
+        if (!formInput) return;
         // Update the Zustand store with the new data
-        if (id) { // Ensure an ID is provided
+        if (id) {
             updateNode(id, {
                 Heading1: formInput.heading1,
                 Content1: formInput.content1,
@@ -100,6 +78,7 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
         } else {
             console.warn("No node ID provided to update accordion content in Zustand.");
         }
+        setShowForm(false);
     };
 
     return (
@@ -142,7 +121,7 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
                 )}
             </div>
 
-            {selected && showForm && (
+            {selected && showForm && formInput && (
                 <form
                     onSubmit={handleFormSubmit}
                     style={{
@@ -157,8 +136,8 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
                     }}
                 >
                     <h3>Edit Accordion Items</h3>
-                    {accordionData.map((item, index) => (
-                        <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                    {[0, 1, 2].map((index) => (
+                        <div key={accordionData[index].id} style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
                             <label>
                                 Heading {index + 1}:
                                 <input
@@ -166,7 +145,7 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
                                     name={`heading${index + 1}`}
                                     value={formInput[`heading${index + 1}`]}
                                     onChange={handleFormInputChange}
-									className="nodrag"
+                                    className="nodrag"
                                     style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px' }}
                                 />
                             </label>
@@ -177,7 +156,7 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
                                     value={formInput[`content${index + 1}`]}
                                     onChange={handleFormInputChange}
                                     rows="3"
-									className="nodrag"
+                                    className="nodrag"
                                     style={{ width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', resize: 'vertical' }}
                                 />
                             </label>
@@ -219,7 +198,7 @@ const RadixAccordion = ({ selected, id }) => { // Accept 'id' prop for the node
     );
 };
 
-const AccordionTrigger = React.forwardRef(
+const AccordionTrigger = React.memo(React.forwardRef(
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Header className="AccordionHeader">
             <Accordion.Trigger
@@ -232,17 +211,18 @@ const AccordionTrigger = React.forwardRef(
             </Accordion.Trigger>
         </Accordion.Header>
     ),
-);
+));
 
-const AccordionContent = React.forwardRef(
+const AccordionContent = React.memo(React.forwardRef(
     ({ children, className, ...props }, forwardedRef) => (
         <Accordion.Content
             className={classNames("AccordionContent", className)}
             {...props}
+            ref={forwardedRef}
         >
             <div className="AccordionContentText">{children}</div>
         </Accordion.Content>
     ),
-);
+));
 
 export default RadixAccordion;
