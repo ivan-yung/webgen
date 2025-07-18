@@ -134,16 +134,17 @@ export const useStore = createWithEqualityFn((set, get) => ({
   },
   clearLlmOutput: () => set({ llmOutput: [] }),
 
-  codeChunks: {},
+  codeChunks: [],
   
-  addCodeChunk: (tokenizedJSON) => {
+  addCodeChunk: (newChunks) => {
+    const chunksToAdd = Object.values(newChunks);
     set((state) => ({
-      // Merges the new tokenized object with the existing chunks
-      codeChunks: { ...state.codeChunks, ...tokenizedJSON }
+      codeChunks: [...state.codeChunks, ...chunksToAdd],
     }));
   },
+
   clearCodeChunks: () => {
-    set({ codeChunks: {} });
+    set({ codeChunks: [] });
   },
   
   tokenize: (text) => {

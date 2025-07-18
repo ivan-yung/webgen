@@ -21,7 +21,6 @@ const selector = (store) => ({
     addCodeChunk: (chunk) => store.addCodeChunk(chunk),
     storeImage: (index, imgData) => store.storeImage(index, imgData),
     tokenize: (text) => store.tokenize(text),
-    clearCodeChunks: store.clearCodeChunks,
 
 
     clearCodeChunks: store.clearCodeChunks,

@@ -2,8 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { useStore } from '../store';
 
-import '../styles/index.css';
-
 const selector = (store) => ({
   codeChunks: store.codeChunks,
   clear: store.clearCodeChunks,
@@ -15,22 +13,9 @@ const ClearIcon = () => (
     <svg width="14" height="14" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 1C5.22386 1 5 1.22386 5 1.5C5 1.77614 5.22386 2 5.5 2H9.5C9.77614 2 10 1.77614 10 1.5C10 1.22386 9.77614 1 9.5 1H5.5ZM2 3.5C2 3.22386 2.22386 3 2.5 3H12.5C12.7761 3 13 3.22386 13 3.5C13 3.77614 12.7761 4 12.5 4H2.5C2.22386 4 2 3.77614 2 3.5ZM3 5.5C3 5.08954 3.38624 4.71429 3.83333 4.71429H11.1667C11.6138 4.71429 12 5.08954 12 5.5V12.5C12 13.3284 11.3284 14 10.5 14H4.5C3.67157 14 3 13.3284 3 12.5V5.5ZM4.71429 5.5V12.5C4.71429 12.6074 4.72381 12.705 4.75 12.7857H10.25C10.2762 12.705 10.2857 12.6074 10.2857 12.5V5.5H4.71429Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
 );
 
-// This helper function is unchanged
-function removeMarkdownCodeFences(inputText) {
-  if (typeof inputText !== 'string') {
-    console.error("Input must be a string.");
-    return "";
-  }
-  const lines = inputText.split('\n');
-  const filteredLines = lines.filter(line => !line.includes('```'));
-  const cleanedString = filteredLines.join('\n');
-  return cleanedString;
-}
-
 export default function LLMSidebar({ width, setWidth }) {
   const { codeChunks, clear, addCodeChunk, tokenize } = useStore(selector, shallow);
   const scrollRef = useRef(null);
-  const [lastCopiedIndex, setLastCopiedIndex] = useState(null);
   const [userInput, setUserInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -45,58 +30,42 @@ export default function LLMSidebar({ width, setWidth }) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const copyHandler = (codeToCopy, index) => {
-    if (codeToCopy) {
-      navigator.clipboard.writeText(codeToCopy)
-        .then(() => {
-          setLastCopiedIndex(index);
-          setTimeout(() => setLastCopiedIndex(null), 2000);
-        })
-        .catch((err) => {
-          console.error('Failed to copy code:', err);
-          alert('Failed to copy code. Try again.');
-        });
-    }
-  };
-
-  // This function is no longer needed as its logic is merged into the form's onSubmit
-  // const sendResponse = async (e) => { ... };
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [codeChunks]);
 
-  // We can now render all chunks, assuming they have a `text` property.
-  // A better approach would be to check for `text` or `code`.
-  const allChunks = Object.values(codeChunks);
-
-  // ### MAJOR CHANGES ARE IN THIS ONSUBMIT HANDLER ###
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!userInput.trim()) return;
 
-    // 1. (NEW) Construct the conversation history from existing chunks
-    const historyString = Object.values(codeChunks)
-      .map(chunk => chunk.text || chunk.code) // Get text from either text or code blocks
+    // NEW: Define the explicit instructions for the LLM.
+    const PROMPT_INSTRUCTIONS = `
+--- IMPORTANT OUTPUT INSTRUCTIONS ---
+
+CRITICAL: Do not use any non-compilable markers to indicate your changes. This includes diff markers like '+' or '-' and markdown fences like \`\`\`. These are not valid code and will crash the application with a SyntaxError.
+
+If you absolutely must mark a change for clarity, you MUST use a standard code comment, for example: // FIXED: Corrected the logic here.
+--- END INSTRUCTIONS ---
+`;
+
+    const historyString = codeChunks
+      .map(chunk => chunk.text || chunk.code)
       .join('\n\n');
 
-    // 2. (NEW) Create the full prompt including history
-    const promptWithHistory = `${historyString}\n\n${userInput}`;
+    // CHANGED: Insert the instructions between the history and the new user input.
+    const promptWithHistory = `${historyString}\n\n${PROMPT_INSTRUCTIONS}\n\nUser: ${userInput}`;
 
-    // 3. (CHANGED) Optimistically add user message for a responsive UI
-    const userBlockKey = `textBlock${Object.keys(codeChunks).length + 1}`;
-    addCodeChunk({ [userBlockKey]: { text: `User: ${userInput}` } });
+    addCodeChunk({ userMessage: { text: `User: ${userInput}` } });
     
     setIsSending(true);
-    setUserInput(''); // Clear input after sending
+    setUserInput('');
 
     try {
       const response = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // 4. (CHANGED) Send the full prompt with history to the backend
         body: JSON.stringify({ instructions: promptWithHistory }),
       });
 
@@ -105,17 +74,12 @@ export default function LLMSidebar({ width, setWidth }) {
       }
       
       const data = await response.json();
-
-      // 5. (REMOVED) The `clear()` call is gone! We now append the response.
-      // clear(); 
-      
-      // 6. (CHANGED) Tokenize and add the new LLM response to the existing chunks
       const tokenized = tokenize(`LLM: ${data.completion}`);
       addCodeChunk(tokenized);
 
     } catch (err) {
       console.error(err);
-      addCodeChunk({ textBlockError: { text: 'Error: Failed to get LLM response.' } });
+      addCodeChunk({ error: { text: 'Error: Failed to get LLM response.' } });
     } finally {
       setIsSending(false);
     }
@@ -156,21 +120,28 @@ export default function LLMSidebar({ width, setWidth }) {
               </button>
             </div>
           </div>
-
+          
           <div ref={scrollRef} className="flex-grow overflow-y-auto">
-            {allChunks.length > 0 ? (
-              allChunks.map((chunk, idx) => (
+            {codeChunks.length > 0 ? (
+              codeChunks.map((chunk, idx) => (
                 <div key={idx} className="font-mono text-sm p-2 border-b border-gray-200 text-gray-700 whitespace-pre-wrap break-words">
-                  {/* We now expect chunks to just have a `text` property */}
-                  {chunk.text}
+                  {chunk.text ? (
+                    <span>{chunk.text}</span>
+                  ) : (
+                    <pre className="bg-gray-200 p-2 rounded overflow-x-auto">
+                      <code>{chunk.code}</code>
+                    </pre>
+                  )}
                 </div>
               ))
             ) : (
-              <div className="p-4 text-center text-sm text-gray-400">No output yet.</div>
+              <div className="p-4 text-center text-sm text-gray-400">
+                No output yet.
+              </div>
             )}
           </div>
-          <div className="p-1 border-t border-gray-300 flex-shrink-0">
-            {/* (CHANGED) The form now uses the new handler */}
+
+          <div className="p-1 border-t border-g-300 flex-shrink-0">
             <form
               className="flex gap-2 p-2 border-t border-gray-300 bg-gray-50"
               onSubmit={handleFormSubmit}
