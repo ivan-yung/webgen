@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useCallback } from "react"; // Import useEffect and useCallback
+import { useState, useEffect, useCallback } from "react";
 
 import { shallow } from 'zustand/shallow';
 import { useStore } from "../store";
@@ -21,9 +21,7 @@ const selector = (store) => ({
     addCodeChunk: (chunk) => store.addCodeChunk(chunk),
     storeImage: (index, imgData) => store.storeImage(index, imgData),
     tokenize: (text) => store.tokenize(text),
-
     clearCodeChunks: store.clearCodeChunks,
-
     bezEdge: store.updateEdgesDefault,
     stepEdge: store.updateEdgesToSmoothstep,
     nodes: store.nodes,
@@ -31,7 +29,6 @@ const selector = (store) => ({
     onNodesChange: store.onNodesChange,
     onEdgesChange: store.onEdgesChange,
     addEdge: store.addEdge,
- 
     logEdges: store.logEdges,
     logStore: store.logStore,
 });
@@ -95,10 +92,9 @@ export default function Buttons({ activated, onLoadingChange }) {
         return parsed;
     }
 
-    // Wrap GenerateHandler in useCallback to prevent re-creation on every render
     const GenerateHandler = useCallback(async () => {
         setIsLoading(true);
-        onLoadingChange?.(true); // Notify parent that loading has started
+        onLoadingChange?.(true); 
         setError(null);
         const rawLayout = logStore();
         console.log(rawLayout);
@@ -140,16 +136,15 @@ export default function Buttons({ activated, onLoadingChange }) {
             setError(error.message);
         } finally {
             setIsLoading(false);
-            onLoadingChange?.(false); // Notify parent that loading has finished
+            onLoadingChange?.(false);
         }
-    }, [logStore, onLoadingChange, store]); // Add dependencies
+    }, [logStore, onLoadingChange, store]);
 
-    // Use useEffect to watch for changes to the `activated` prop
     useEffect(() => {
         if (activated) {
             GenerateHandler();
         }
-    }, [activated, GenerateHandler]); // Effect depends on `activated` and the memoized handler
+    }, [activated, GenerateHandler]);
 
     const createNavBar = () => {
         store.createNode(
@@ -208,45 +203,55 @@ export default function Buttons({ activated, onLoadingChange }) {
 
     return (
         <>
-            {/* Loading Modal Overlay */}
-            {isLoading && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="flex flex-col items-center justify-center bg-white rounded-2xl shadow-2xl p-8 drop-shadow-2xl animate-fade-in-up">
-                        {/* ... (loading modal content remains the same) */}
-                        <div className="mb-4">
-                            <svg className="w-20 h-20 animate-swim" viewBox="0 0 64 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g>
-                                    <ellipse cx="32" cy="16" rx="18" ry="10" fill="#60a5fa" />
-                                    <ellipse cx="48" cy="16" rx="6" ry="4" fill="#3b82f6" />
-                                    <ellipse cx="16" cy="16" rx="6" ry="4" fill="#3b82f6" />
-                                    <circle cx="40" cy="14" r="2" fill="#fff" />
-                                    <circle cx="40" cy="14" r="1" fill="#1e293b" />
-                                    <polygon points="58,16 64,12 64,20" fill="#60a5fa" />
-                                </g>
-                            </svg>
-                            <style>{`
-                                @keyframes swim {
-                                    0% { transform: translateX(0) scaleY(1); }
-                                    25% { transform: translateX(5px) scaleY(0.95); }
-                                    50% { transform: translateX(0) scaleY(1.05); }
-                                    75% { transform: translateX(-5px) scaleY(0.95); }
-                                    100% { transform: translateX(0) scaleY(1); }
-                                }
-                                .animate-swim { animation: swim 1.5s infinite cubic-bezier(0.4,0,0.2,1); }
-                            `}</style>
-                        </div>
-                        <div className="w-12 h-12 border-4 border-blue-300 border-t-blue-600 rounded-full animate-spin mb-4 shadow-lg"></div>
-                        <div className="text-lg font-semibold text-blue-700 mb-1">Generating your magical site...</div>
-                        <div className="text-sm text-gray-500">Our AI fish is swimming through code. Please wait a moment!</div>
-                    </div>
-                </div>
-            )}
+{/* --- Refined Glass UI Loading Modal --- */}
+{isLoading && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
+        <div className="bg-white/60 backdrop-filter backdrop-blur-xl border border-white/60 rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+            {/* Animated Loading Icon */}
+            <div className="relative w-24 h-24 mb-6">
+                <div className="absolute inset-0 border-4 border-t-4 border-transparent border-t-cyan-500 rounded-full animate-spin-slow"></div>
+                <div className="absolute inset-2 border-4 border-t-4 border-transparent border-t-fuchsia-600 rounded-full animate-spin-medium"></div>
+                <div className="absolute inset-4 border-4 border-t-4 border-transparent border-t-lime-500 rounded-full animate-spin-fast"></div>
+            </div>
+            <style>{`
+                @keyframes spin-slow {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes spin-medium {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(-360deg); }
+                }
+                @keyframes spin-fast {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 3s linear infinite;
+                }
+                .animate-spin-medium {
+                    animation: spin-medium 1.8s linear infinite;
+                }
+                .animate-spin-fast {
+                    animation: spin-fast 1s linear infinite;
+                }
+            `}</style>
+
+            {/* Modern, Visible Text Content */}
+            <h3 className="text-xl font-bold text-slate-800 mb-2 tracking-wide">Brewing some magic!</h3>
+            <p className="text-sm text-slate-600 max-w-xs text-center">
+                This can take up to 30 seconds. Why not take a moment to stretch or ponder the mysteries of the universe?
+            </p>
+        </div>
+    </div>
+)}
             {/* Logo: hidden on mobile */}
             <div className="fixed top-0 left-0 z-50 flex items-center h-[64px] bg-transparent select-none min-w-[200px] hidden md:flex">
                 <span className="text-3xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 drop-shadow ml-4" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.12em' }}>
                     Vi<span className="text-blue-500">b</span><span className="text-purple-500">e</span><span className="text-pink-500">Web</span>
                 </span>
             </div>
+
             {/* Buttons bar */}
             <div className="w-full flex justify-center items-center gap-2 bg-gray-100 p-2 rounded-md shadow-md md:pl-[220px] flex-wrap">
                 <Button
