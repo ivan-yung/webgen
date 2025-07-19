@@ -1,46 +1,52 @@
 import React from 'react';
-import { Sandpack } from "@codesandbox/sandpack-react"
 import SandPackRender from './SandPackRender';
 import { shallow } from 'zustand/shallow';
 import { useStore } from '../store';
 
-
-const selector =  (store) => ({
-  code: store.code,
-  llmOutput: store.llmOutput,
-  clearLlmOutput: store.clearLlmOutput,
-  addLlmOutput: store.addLlmOutput,
+// 1. CORRECTED: The selector now correctly pulls the `codeChunks` array from the store.
+const selector = (store) => ({
+  codeChunks: store.codeChunks,
 });
 
-function extractLatestCode() {
-  const currentState = useStore.getState().codeChunks;
-  for (const key in currentState) {
-    if (currentState.hasOwnProperty(key)) {
-      const codeBlock = currentState[key];
-      if (codeBlock && codeBlock.code) {
-        // Append .jsx to the filename key
-        return { [`App.js`]: { code: codeBlock.code } }; 
-      }
-    }
+/**
+ * 2. REWRITTEN: This new function finds the LATEST code chunk.
+ * It accepts the chunks array as an argument instead of calling the store directly.
+ *
+ * @param {Array} chunks - The codeChunks array from the store.
+ * @returns {Object|undefined} - The Sandpack-formatted file object or undefined.
+ */
+function findLatestCodeChunk(chunks) {
+  // Guard against empty or invalid input
+  if (!Array.isArray(chunks) || chunks.length === 0) {
+    return undefined;
   }
-  // Return undefined if no code is found, which SandPackRender will handle
-  return undefined; 
+
+  // Find the last chunk in the array that has a 'code' property.
+  const latestCodeChunk = chunks
+    .slice()
+    .reverse()
+    .find(chunk => chunk.hasOwnProperty('code'));
+
+  if (latestCodeChunk) {
+    // CHANGED: The filename is now /App.js to match the Sandpack default.
+    return { '/App.js': { code: latestCodeChunk.code } };
+  }
+
+  return undefined;
 }
-
 const RenderCode = () => {
-  const {code, llmOutput, clearLlmOutput, addLlmOutput, codeChunks} = useStore(selector, shallow);
+  // 3. CORRECTED: We now get the codeChunks array from our corrected selector.
+  const { codeChunks } = useStore(selector, shallow);
 
-  // 'code' is llmOutput array from Zustand
-  const latestCode = extractLatestCode();
+  // 4. Call the rewritten function with the reactive state from the hook.
+  const latestCode = findLatestCodeChunk(codeChunks);
 
+  console.log('Latest Code for Sandpack:', latestCode);
 
   return (
-      <>
-      <SandPackRender code = {latestCode}/>
-      </>
+    // The SandPackRender component receives the correctly formatted, latest code.
+    <SandPackRender code={latestCode} />
   );
 };
 
 export default RenderCode;
-
-

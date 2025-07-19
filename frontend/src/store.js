@@ -33,7 +33,6 @@ export const useStore = createWithEqualityFn((set, get) => ({
       deletable: false
     },
   ],
-  edges: [],
  
   // Creates a node based on parameters passed
   // @type: object type (string input)
@@ -93,19 +92,6 @@ export const useStore = createWithEqualityFn((set, get) => ({
       nodes: applyNodeChanges(changes, get().nodes),
     });
   },
- 
-  onEdgesChange(changes) {
-    set({
-      edges: applyEdgeChanges(changes, get().edges),
-    });
-  },
- 
-  addEdge(data) {
-    const id = nanoid(6);
-    const edge = { id, ...data };
- 
-    set({ edges: [edge, ...get().edges] });
-  },
 
     //debug funct
   logStore: () => {
@@ -113,36 +99,70 @@ export const useStore = createWithEqualityFn((set, get) => ({
     return store.nodes;
   },
 
-  // --- NEW additions for LLM Console ---
-  llmOutput: [
-    // Add a default message to show it's working
-    { type: 'system', message: 'LLM Console initialized.' }
-  ],
-  addLlmOutput: (entry) =>
-    set((state) => ({
-      llmOutput: [...state.llmOutput, entry],
-    })),
-
-  // Helper to log a new LLM output (string or object)
-  logLlmOutput: (message) => {
-    set((state) => ({
-      llmOutput: [
-        ...state.llmOutput,
-        typeof message === 'string' ? { type: 'llm', message } : message,
-      ],
-    }));
-  },
-  clearLlmOutput: () => set({ llmOutput: [] }),
-
-  codeChunks: {},
+  codeChunks: [],
   
-  addCodeChunk: (tokenizedJSON) => {
+  addCodeChunk: (newChunks) => {
+    const chunksToAdd = Object.values(newChunks);
     set((state) => ({
-      // Merges the new tokenized object with the existing chunks
-      codeChunks: { ...state.codeChunks, ...tokenizedJSON }
+      codeChunks: [...state.codeChunks, ...chunksToAdd],
     }));
   },
+
   clearCodeChunks: () => {
-    set({ codeChunks: {} });
+    set({ codeChunks: [] });
+  },
+  
+  tokenize: (text) => {
+    let tokenizedJSON = {};
+    let count = 0;
+    let textCount = 0;
+    let first = null;
+    let language = '';
+    let lastEnd = 0;
+    let inCodeBlock = false;
+    for (let i = 0; i < text.length; i++) {
+      if ((text[i] === '`') && (text[i + 1] === '`') && (text[i + 2] === '`')) {
+        count += 1;
+        if (count % 2 === 0) {
+          const codeBlock = text.slice(first, i);
+          tokenizedJSON[`codeBlock${count / 2}`] = {
+            code: codeBlock,
+            language: language.trim()
+          };
+          language = '';
+          lastEnd = i + 3;
+          inCodeBlock = false;
+        } else {
+          if (lastEnd < i) {
+            const textBlock = text.slice(lastEnd, i);
+            if (textBlock.trim().length > 0) {
+              textCount++;
+              tokenizedJSON[`textBlock${textCount}`] = {
+                text: textBlock.trim()
+              };
+            }
+          }
+          let langStart = i + 3;
+          let langEnd = langStart;
+          while (langEnd < text.length && text[langEnd] !== '\n' && text[langEnd] !== '\r') {
+            langEnd++;
+          }
+          language = text.slice(langStart, langEnd);
+          first = langEnd + 1;
+          inCodeBlock = true;
+        }
+        i += 2;
+      }
+    }
+    if (!inCodeBlock && lastEnd < text.length) {
+      const trailingText = text.slice(lastEnd);
+      if (trailingText.trim().length > 0) {
+        textCount++;
+        tokenizedJSON[`textBlock${textCount}`] = {
+          text: trailingText.trim()
+        };
+      }
+    }
+    return tokenizedJSON;
   },
 }));
