@@ -33,7 +33,6 @@ export const useStore = createWithEqualityFn((set, get) => ({
       deletable: false
     },
   ],
-  edges: [],
  
   // Creates a node based on parameters passed
   // @type: object type (string input)
@@ -93,46 +92,12 @@ export const useStore = createWithEqualityFn((set, get) => ({
       nodes: applyNodeChanges(changes, get().nodes),
     });
   },
- 
-  onEdgesChange(changes) {
-    set({
-      edges: applyEdgeChanges(changes, get().edges),
-    });
-  },
- 
-  addEdge(data) {
-    const id = nanoid(6);
-    const edge = { id, ...data };
- 
-    set({ edges: [edge, ...get().edges] });
-  },
 
     //debug funct
   logStore: () => {
     const store = get();
     return store.nodes;
   },
-
-  // --- NEW additions for LLM Console ---
-  llmOutput: [
-    // Add a default message to show it's working
-    { type: 'system', message: 'LLM Console initialized.' }
-  ],
-  addLlmOutput: (entry) =>
-    set((state) => ({
-      llmOutput: [...state.llmOutput, entry],
-    })),
-
-  // Helper to log a new LLM output (string or object)
-  logLlmOutput: (message) => {
-    set((state) => ({
-      llmOutput: [
-        ...state.llmOutput,
-        typeof message === 'string' ? { type: 'llm', message } : message,
-      ],
-    }));
-  },
-  clearLlmOutput: () => set({ llmOutput: [] }),
 
   codeChunks: [],
   
