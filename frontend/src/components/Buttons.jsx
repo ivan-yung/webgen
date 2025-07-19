@@ -259,7 +259,7 @@ export default function Buttons({ activated, onLoadingChange }) {
                 </Button>
                 <Button variant="outline" onClick={createNavBar} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Nav</Button>
                 <Button variant="outline" onClick={createNavMenu} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>NavMenu</Button>
-                <Button variant="outline" onClick={createaccordion} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>accordion</Button>
+                <Button variant="outline" onClick={createaccordion} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Accordion</Button>
                 <Button variant="outline" onClick={createPicture} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Picture</Button>
                 <Button variant="outline" onClick={createButton} className="px-5 py-2 md:px-5 md:py-2" style={isMobile ? { fontSize: '3.5vw', padding: '2vw 4vw', minWidth: 0, maxWidth: '100%', width: 'auto' } : {}}>Button</Button>
             </div>
