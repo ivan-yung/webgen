@@ -206,7 +206,7 @@ export default function Buttons({ activated, onLoadingChange }) {
 {/* --- Refined Glass UI Loading Modal --- */}
 {isLoading && (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-[2px]">
-        <div className="bg-white/60 backdrop-filter backdrop-blur-xl border border-white/60 rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+        <div className="bg-white/96 backdrop-filter backdrop-blur-xl border border-white/60 rounded-2xl shadow-2xl p-8 flex flex-col items-center">
             {/* Animated Loading Icon */}
             <div className="relative w-24 h-24 mb-6">
                 <div className="absolute inset-0 border-4 border-t-4 border-transparent border-t-cyan-500 rounded-full animate-spin-slow"></div>
