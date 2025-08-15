@@ -1,6 +1,8 @@
-# VibeWeb
+<img width="1537" height="979" alt="image" src="https://github.com/user-attachments/assets/7cdfe566-1d19-4929-98d2-57d6906bc895" />
+<img width="1537" height="981" alt="image" src="https://github.com/user-attachments/assets/1efb87f4-357f-47ac-9d08-c2a916d8b8bd" />
 
-WebProducer is a platform for streamlined web content generation and design. The project consists of a React-based frontend (webgen) and supporting backend services, designed to help users easily create, edit, and deploy web content.we
+# VibeWeb
+A platform for streamlined web content generation and design. The project consists of a React-based frontend (webgen) and supporting backend services, designed to help users easily create, edit, and deploy web content
 
 ### Drag-and-Drop Interactive Design
 VibeWeb features a powerful drag-and-drop editor, allowing users to visually compose their websites by arranging interactive design elements—such as text blocks, images, buttons, and layouts—directly on the canvas. This no-code approach makes it easy for anyone to create professional-looking pages without technical expertise.
