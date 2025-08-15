@@ -1,12 +1,57 @@
-# React + Vite
+# WebGen Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+WebGen is a React-based frontend for the WebProducer project, designed to streamline web content generation and management. This repository contains the source code for the user interface, built with modern web technologies.
 
-Currently, two official plugins are available:
+## Features
+- Intuitive UI for web content creation
+- Integration with backend APIs
+- Responsive design
+- Modular component architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
+- Node.js (v16 or higher recommended)
+- npm or yarn
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/webgen.git
+   cd webgen/frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   # or
+   yarn install
+   ```
+
+### Running the Development Server
+```bash
+npm start
+# or
+yarn start
+```
+The app will be available at `http://localhost:3000`.
+
+### Building for Production
+```bash
+npm run build
+# or
+yarn build
+```
+The production-ready files will be in the `build/` directory.
+
+## Project Structure
+```
+frontend/
+├── public/         # Static assets
+├── src/            # Source code
+│   ├── components/ # React components
+│   ├── pages/      # Page components
+│   ├── api/        # API utilities
+│   └── ...
+├── package.json    # Project metadata and scripts
+└── README.md       # Project documentation
+```
