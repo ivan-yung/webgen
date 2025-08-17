@@ -17,7 +17,7 @@ WebGen is a React-based frontend for the WebProducer project, designed to stream
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/webgen.git
+   git clone https://github.com/ivan-yung/webgen.git
    cd webgen/frontend
    ```
 2. Install dependencies:
