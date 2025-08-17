@@ -33,11 +33,6 @@ VibeWeb/
 └── README.md   # Main project documentation
 ```
 
-## Contributing
-We welcome contributions! Please open issues for bugs or feature requests, and submit pull requests for improvements.
-
 ## License
 This project is licensed under the MIT License.
 
-## Contact
-For questions or support, please contact the maintainer at [your-email@example.com].
