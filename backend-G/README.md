@@ -7,7 +7,7 @@ To run the backend, ensure you have a valid `.env` file with required environmen
 ```bash
 export $(cat .env | xargs)
 ```
-Then start the backend service as per your framework's instructions (e.g., `npm start`, `python app.py`, etc.).
+Then start the backend service: (`python3 serve.go`, etc.).
 
 ## Features
 - RESTful API endpoints
