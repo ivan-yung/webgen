@@ -28,7 +28,7 @@ See [`frontend/README.md`](frontend/README.md) for setup and development instruc
 ```
 VibeWeb/
 ├── frontend/   # React-based user interface
-├── backend/    # API and server logic (if present)
+├── backend/    # API and server logic
 ├── ...         # Other supporting files
 └── README.md   # Main project documentation
 ```
