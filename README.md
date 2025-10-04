@@ -5,7 +5,7 @@
 A platform for streamlined web content generation and design. The project consists of a React-based frontend (webgen) and supporting backend services, designed to help users easily create, edit, and deploy web content
 
 ### Drag-and-Drop Interactive Design
-VibeWeb features a powerful drag-and-drop editor, allowing users to visually compose their websites by arranging interactive design elements—such as text blocks, images, buttons, and layouts—directly on the canvas. This no-code approach makes it easy for anyone to create professional-looking pages without technical expertise.
+VibeWeb features a powerful drag-and-drop editor, allowing users to visually compose their websites by arranging interactive design elements such as text blocks, images, buttons, and layouts. All directly in browser. This no-code approach makes it easy for anyone to create professional-looking pages without technical expertise.
 
 ### AI-Powered Code Generation
 As users design their pages, VibeWeb leverages AI to automatically translate the visual layout into clean, production-ready code. The generated code is:
